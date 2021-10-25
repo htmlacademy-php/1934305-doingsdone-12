@@ -132,7 +132,7 @@ $tasks = [
                 <table class="tasks">
                     <?php foreach ($tasks as $task) : ?>
                         <?php
-                            if ($show_complete_tasks === 0 && $task["is_finished"] ?? false) {
+                            if ($show_complete_tasks === 0 && $task["is_finished"]) {
                                 continue;
                             }
                         ?>
@@ -140,11 +140,11 @@ $tasks = [
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
-                                    <?php if ($task["is_finished"] ?? false) : ?>
+                                    <?php if ($task["is_finished"]) : ?>
                                         checked
                                     <?php endif ?>
                                     >
-                                    <span class="checkbox__text"><?= $task["task_name"] ?? "Дело не найдено"?></span>
+                                    <span class="checkbox__text"><?= $task["task_name"] ?></span>
                                 </label>
                             </td>
 
@@ -152,7 +152,7 @@ $tasks = [
                                 <a class="download-link" href="#">Home.psd</a>
                             </td>
 
-                            <td class="task__date"><?= $task["date"] ?? "Дата не установлена" ?></td>
+                            <td class="task__date"><?= $task["date"] ?></td>
                         </tr>
                     <?php endforeach; ?>
                     <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
