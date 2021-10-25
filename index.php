@@ -2,7 +2,7 @@
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+$categories = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 
 $tasks = [
     [
@@ -49,12 +49,18 @@ $tasks = [
 
 ];
 
-function count_projects(string $project, array $tasks): int
+/**
+* Вычисляет количество задач в каждой из категорий проектов и возвращает результат в виде числа.
+* @param string $category имя категории, которую нужно подсчитать
+* @param array $task массив всех задач.
+* @param int количество задач нужной категории 
+*/
+function count_categories(string $category, array $tasks): int
 {
     $count = 0;
 
     foreach ($tasks as $task) {
-        if ($project === $task["category"]) {
+        if ($category === $task["category"]) {
             $count++;
         }
     }
@@ -103,10 +109,10 @@ function count_projects(string $project, array $tasks): int
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php foreach ($projects as $project) : ?>
+                        <?php foreach ($categories as $category) : ?>
                             <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#"><?= $project ?></a>
-                            <span class="main-navigation__list-item-count"><?= count_projects($project, $tasks); ?></span>
+                            <a class="main-navigation__list-item-link" href="#"><?= $category ?></a>
+                            <span class="main-navigation__list-item-count"><?= count_categories($category, $tasks); ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
