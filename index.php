@@ -4,7 +4,7 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 require_once("helpers.php");
-// показывать или нет выполненные задачи
+
 $show_complete_tasks = rand(0, 1);
 $title = "Дела в порядке";
 
@@ -80,7 +80,8 @@ function count_categories(string $category, array $tasks): int
 * @param @str строка с данными, которая может содержать спецсимволы
 * @return $text очищенная строка
 */
-function esc($str) {
+function esc(string $str): string 
+{
 	$text = htmlspecialchars($str);
 
 	return $text;
@@ -89,9 +90,7 @@ function esc($str) {
 $page_content = include_template("main.php", [
     "categories" => $categories,
     "tasks" => $tasks,
-    "count_categories" => "count_categories",
-    "show_complete_tasks" => $show_complete_tasks,
-    "esc" => "esc"
+    "show_complete_tasks" => $show_complete_tasks
 ]);
 
 $layout_content = include_template("layout.php", [
