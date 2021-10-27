@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 require_once("helpers.php");
 
 $show_complete_tasks = rand(0, 1);
@@ -13,28 +9,28 @@ $categories = ["Входящие", "Учеба", "Работа", "Домашни
 $tasks = [
     [
         "task_name" => "Собеседование в IT компании",
-        "date" => "01.12.2019",
+        "date" => "01.11.2021",
         "category" => "Работа",
         "is_finished" => false
     ],
 
     [
         "task_name" => "Выполнить тестовое задание",
-        "date" => "25.12.2019",
+        "date" => "27.10.2021",
         "category" => "Работа",
         "is_finished" => false
     ],
 
     [
         "task_name" => "Сделать задание первого раздела",
-        "date" => "21.12.2019",
+        "date" => "21.11.2021",
         "category" => "Учеба",
         "is_finished" => true
     ],
 
     [
         "task_name" => "Встреча с другом",
-        "date" => "22.12.2019",
+        "date" => "22.11.2021",
         "category" => "Входящие",
         "is_finished" => false
     ],
@@ -77,14 +73,45 @@ function count_categories(string $category, array $tasks): int
 /**
 * Простая фунция-обертка, фильтрует содержимое и возвращает строку, очищенную
 * от опасных спецсимволов
-* @param @str строка с данными, которая может содержать спецсимволы
+* @param @str строка с данными, которая может содержать спецсимволы, или null
 * @return $text очищенная строка
 */
-function esc(string $str): string 
+function esc(string|null $str): string 
 {
 	$text = htmlspecialchars($str);
 
 	return $text;
+}
+
+/**
+* Вычисляет количество часов оставшихся для выполнения задачи.
+* @param string $date_str дата в виде строки так же может быть null
+* @return bool если количество часов до выполнения задачи меньше или равно 24 возвращает true, иначе false
+*/
+function count_hours(string|null $date_str): bool
+{
+    if ($date_str === null) {
+        return false;
+    }
+
+    $dt_end = date_create($date_str);
+
+    // Т.к. в данных у даты не указанны часы, то дата создаётся в часовом диапазоне 00:00
+    // но в задаче подразумевается, что дата считается с конца дня, а не с начала, для этого
+    // добавляю еще 24 часа к созданной дате.
+    $dt_end->modify("+1 day");
+    $dt_now = date_create("now");
+
+    $diff = $dt_end->diff($dt_now);
+
+    $hours = $diff->h;
+    $hours += $diff->days * 24;
+
+    if ($hours <= 24) {
+        return true;
+    }
+
+    return false;
 }
 
 $page_content = include_template("main.php", [
