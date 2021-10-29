@@ -43,7 +43,7 @@
                 }
             ?>
                 <tr class="tasks__item task 
-                <?php if (count_hours($task["date"])) : ?>
+                <?php if (is_task_important($task["date"])) : ?>
                     task--important
                 <?php endif; ?>">
                 <td class="task__select">

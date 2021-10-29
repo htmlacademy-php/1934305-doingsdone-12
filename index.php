@@ -16,7 +16,7 @@ $tasks = [
 
     [
         "task_name" => "Выполнить тестовое задание",
-        "date" => "27.10.2021",
+        "date" => "29.10.2021",
         "category" => "Работа",
         "is_finished" => false
     ],
@@ -84,11 +84,11 @@ function esc(string|null $str): string
 }
 
 /**
-* Вычисляет количество часов оставшихся для выполнения задачи.
+* Определяет является ли дата датой, для выполнения которой осталось меньше 24 часов
 * @param string $date_str дата в виде строки так же может быть null
 * @return bool если количество часов до выполнения задачи меньше или равно 24 возвращает true, иначе false
 */
-function count_hours(string|null $date_str): bool
+function is_task_important(string|null $date_str): bool
 {
     if ($date_str === null) {
         return false;
