@@ -102,7 +102,11 @@ function is_task_important(string|null $date_str): bool
     $dt_end->modify("+1 day");
     $dt_now = date_create("now");
 
-    $diff = $dt_end->diff($dt_now);
+    $diff = $dt_now->diff($dt_end);
+
+    if ($diff->invert) {
+        return true;
+    }
 
     $hours = $diff->h;
     $hours += $diff->days * 24;
