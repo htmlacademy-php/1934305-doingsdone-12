@@ -104,12 +104,8 @@ function is_task_important(string|null $date_str): bool
 
     $diff = $dt_now->diff($dt_end);
 
-    if ($diff->invert) {
-        return true;
-    }
-
-    $hours = $diff->h;
-    $hours += $diff->days * 24;
+    $hours = (int)$diff->format("%r%h");
+    $hours += (int)$diff->format("%r%a") * 24;
 
     if ($hours <= 24) {
         return true;
