@@ -6,7 +6,7 @@
                 <?php foreach ($categories as $category) : ?>
                 <li class="main-navigation__list-item">
                     <a class="main-navigation__list-item-link" href="#"><?= $category ?></a>
-                    <span class="main-navigation__list-item-count"><?= count_categories($category,$tasks) ?></span>
+                    <span class="main-navigation__list-item-count"><?= count_categories($category, $tasks) ?></span>
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -37,12 +37,15 @@
         </div>
         <table class="tasks">
             <?php foreach ($tasks as $task) : ?>
-            <?php 
+            <?php
                 if ($show_complete_tasks === 0 && $task["is_finished"]) {
                     continue;
-                } 
+                }
             ?>
-            <tr class="tasks__item task">
+                <tr class="tasks__item task 
+                <?php if (is_task_important($task["date"])) : ?>
+                    task--important
+                <?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
