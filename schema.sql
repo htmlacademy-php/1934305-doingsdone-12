@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS tasks(
     creation_time DATETIME NOT NULL,
     status BOOLEAN NOT NULL DEFAULT False,
     file VARCHAR(255),
-    end_time DATE NOT NULL,
+    end_time DATE DEFAULT NULL,
     user_id INT UNSIGNED NOT NULL,
     project_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
