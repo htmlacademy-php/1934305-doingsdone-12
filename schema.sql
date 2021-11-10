@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS doingsdone_NoSpooksAllowed;
 
 USE doingsdone_NoSpooksAllowed;
 
-CREATE TABLE IF NOT EXISTS user(
+CREATE TABLE IF NOT EXISTS users(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(70) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS user(
     registration_time DATETIME NOT NULL 
 );
 
-CREATE TABLE IF NOT EXISTS project(
+CREATE TABLE IF NOT EXISTS projects(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(70) NOT NULL,
     user_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS tasks(
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS tasks(
     end_time DATE NOT NULL,
     user_id INT UNSIGNED NOT NULL,
     project_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (project_id) REFERENCES project(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (project_id) REFERENCES projects(id),
     INDEX status (status)
 );
