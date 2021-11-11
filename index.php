@@ -1,55 +1,9 @@
 <?php
 require_once("helpers.php");
+require_once("init.php");
 
 $show_complete_tasks = rand(0, 1);
 $title = "Дела в порядке";
-
-$categories = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
-
-$tasks = [
-    [
-        "task_name" => "Собеседование в IT компании",
-        "date" => "01.11.2021",
-        "category" => "Работа",
-        "is_finished" => false
-    ],
-
-    [
-        "task_name" => "Выполнить тестовое задание",
-        "date" => "29.10.2021",
-        "category" => "Работа",
-        "is_finished" => false
-    ],
-
-    [
-        "task_name" => "Сделать задание первого раздела",
-        "date" => "21.11.2021",
-        "category" => "Учеба",
-        "is_finished" => true
-    ],
-
-    [
-        "task_name" => "Встреча с другом",
-        "date" => "22.11.2021",
-        "category" => "Входящие",
-        "is_finished" => false
-    ],
-
-    [
-        "task_name" => "Купить корм для кота",
-        "date" => null,
-        "category" => "Домашние дела",
-        "is_finished" => false
-    ],
-
-    [
-        "task_name" => "Заказать пиццу",
-        "date" => null,
-        "category" => "Домашние дела",
-        "is_finished" => false
-    ],
-
-];
 
 /**
 * Вычисляет количество задач в каждой из категорий проектов и возвращает результат в виде числа.
@@ -113,6 +67,76 @@ function is_task_important(string|null $date_str): bool
 
     return false;
 }
+
+/**
+ * Отображает что произошла ошибка при обработке запроса и выводит стандартный html шаблон
+ * @param $error - ошибка от БД  
+*/
+function render_error($error)
+{
+    $err_content = include_template("error.php", ["error" => $error]);
+    $layout_content = include_template("layout.php", [
+        "content" => $err_content,
+        "title" => "Ошибка соединения"    
+    ]);
+
+    print($layout_content);
+}
+
+/**
+ * Возвращает результат работы подготовленного выражения для дальнейшей обраотки данных пользователя
+ * @param string $sql_query - подготовленная строка SQL запроса
+ * @param string $id - номер id пользователя
+ * @param @con - информация для соединения с БД
+ * @return mysqli_result - результат подготовленного выражения
+*/
+function get_user_stmt_result(string $sql_query, string $id, $con)
+{
+    $prepared_statement = db_get_prepare_stmt($con, $sql_query, ["id" => $id]);
+    mysqli_stmt_execute($prepared_statement);
+
+    return mysqli_stmt_get_result($prepared_statement); 
+}
+
+$con = mysqli_connect($db["host"], $db["user"], $db["password"], $db["database"]);
+mysqli_set_charset($con, "utf8");
+
+if ($con === false) {
+    $error = mysqli_connect_error();
+    render_error($error);
+    exit();
+} 
+
+$select_projects_by_id = "SELECT name FROM projects WHERE user_id = ?";
+$select_tasks_by_id = 
+"SELECT t.name AS task_name, t.end_time AS date, p.name AS category, t.status AS is_finished 
+    FROM tasks AS t 
+    JOIN projects AS p ON t.project_id = p.id 
+    WHERE t.user_id = ?";
+$id = 1; // Сейчас пока 1, потом заменю на $_GET
+$categories = [];
+
+$result = get_user_stmt_result($select_projects_by_id, $id, $con);
+if ($result) {
+    $data_res = mysqli_fetch_all($result, MYSQLI_NUM);
+    foreach ($data_res as $elem) {
+        $categories = array_merge($categories, $elem);
+    }
+} else {
+    $error = mysqli_error($con);
+    render_error($error);
+    exit();
+}
+
+$result = get_user_stmt_result($select_tasks_by_id, $id, $con);
+if ($result) {
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+} else {
+    $error = mysqli_error($con);
+    render_error($error);
+    exit();
+}
+
 
 $page_content = include_template("main.php", [
     "categories" => $categories,
