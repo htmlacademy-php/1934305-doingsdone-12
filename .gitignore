@@ -9,4 +9,4 @@ Thumbs.db
 vendor
 uploads/*
 !uploads/.gitkeep
-info.csv
+config.php

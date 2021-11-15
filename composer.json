@@ -1,0 +1,13 @@
+{
+  "name": "spook/doingsdone",
+  "type": "project",
+  "authors": [
+    {
+      "name": "spook",
+      "email": "hersgori4@protonmail.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
