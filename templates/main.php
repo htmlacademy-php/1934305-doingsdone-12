@@ -4,10 +4,10 @@
         <nav class="main-navigation">
             <ul class="main-navigation__list">
                 <?php
-                foreach ($categories as $category) : ?>
+                foreach ($projects as $project) : ?>
                     <li class="main-navigation__list-item">
-                        <a class="main-navigation__list-item-link" href="#"><?= $category ?></a>
-                        <span class="main-navigation__list-item-count"><?= count_categories($category, $tasks) ?></span>
+                        <a class="main-navigation__list-item-link" href="#"><?= $project["name"] ?></a>
+                        <span class="main-navigation__list-item-count"><?= countProjects($project["name"], $tasks) ?></span>
                     </li>
                 <?php
                 endforeach; ?>
@@ -32,7 +32,7 @@
             <label class="checkbox">
                 <input class="checkbox__input visually-hidden show_completed" type="checkbox"
                     <?php
-                    if ($show_complete_tasks) : ?>
+                    if ($showCompleteTasks) : ?>
                         checked
                     <?php
                     endif; ?>>
@@ -43,13 +43,13 @@
             <?php
             foreach ($tasks as $task) : ?>
                 <?php
-                if ($show_complete_tasks === 0 && $task["is_finished"]) {
+                if ($showCompleteTasks === 0 && $task["is_finished"]) {
                     continue;
                 }
                 ?>
                 <tr class="tasks__item task
                 <?php
-                if (is_task_important($task["date"])) : ?>
+                if (isTaskImportant($task["date"], date_create())) : ?>
                     task--important
                 <?php
                 endif; ?>">
