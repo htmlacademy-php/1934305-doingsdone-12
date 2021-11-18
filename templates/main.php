@@ -7,7 +7,7 @@
                 foreach ($projects as $project) : ?>
                     <li class="main-navigation__list-item
                     <?php
-                    if ($projectId !== null && (int)$projectId === $project["id"]) : ?>
+                    if ($projectId !== null && (int) $projectId === $project["id"]) : ?>
                         main-navigation__list-item--active
                     <?php
                     endif; ?>

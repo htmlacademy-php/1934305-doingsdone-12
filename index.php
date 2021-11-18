@@ -8,7 +8,7 @@ $title = "Дела в порядке";
 $con = makeConnection($config["db"]);
 
 $userId = 1; // Сейчас пока 1, потом заменю на $_GET
-$projectId = $_GET["project_id"] ?? null;
+$projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 
 $projects = [];
 
@@ -18,6 +18,11 @@ if ($projectId) {
     $tasks = getTasksByProjectId($con, $userId, $projectId);
 } else {
     $tasks = getTasksAll($con, $userId);
+}
+
+if (empty($tasks)) {
+    http_response_code(404);
+    exit();
 }
 
 $pageContent = includeTemplate("main.php", [
