@@ -16,7 +16,8 @@ $tasks = getTasks($con, $id);
 $pageContent = includeTemplate("main.php", [
     "projects" => $projects,
     "tasks" => $tasks,
-    "showCompleteTasks" => $showCompleteTasks
+    "showCompleteTasks" => $showCompleteTasks,
+    "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME)
 ]);
 
 $layoutContent = includeTemplate("layout.php", [

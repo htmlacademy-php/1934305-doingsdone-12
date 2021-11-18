@@ -6,8 +6,12 @@
                 <?php
                 foreach ($projects as $project) : ?>
                     <li class="main-navigation__list-item">
-                        <a class="main-navigation__list-item-link" href="#"><?= $project["name"] ?></a>
-                        <span class="main-navigation__list-item-count"><?= countProjects($project["name"], $tasks) ?></span>
+                        <a class="main-navigation__list-item-link"
+                           href="<?= makeURL($scriptName, ["id" => $project["id"]]) ?>"><?= $project["name"] ?></a>
+                        <span class="main-navigation__list-item-count"><?= countProjects(
+                                $project["name"],
+                                $tasks
+                            ) ?></span>
                     </li>
                 <?php
                 endforeach; ?>
