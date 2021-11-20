@@ -98,22 +98,3 @@ function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
 
     return false;
 }
-
-/**
- * Вычисляет количество задач в каждой из категорий проектов и возвращает результат в виде числа.
- * @param string $project имя категории, которую нужно подсчитать
- * @param array $tasks массив всех задач.
- * @return int количество задач нужной категории
- */
-function countProjects(string $project, array $tasks): int
-{
-    $count = 0;
-
-    foreach ($tasks as $task) {
-        if ($project === $task["project"]) {
-            $count++;
-        }
-    }
-
-    return $count;
-}

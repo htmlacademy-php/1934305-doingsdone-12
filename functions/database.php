@@ -54,13 +54,13 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data): mysqli_stmt
 /**
  * Возвращает результат работы подготовленного выражения для дальнейшей обраотки данных пользователя
  * @param string $sqlQuery - подготовленная строка SQL запроса
- * @param string $id - номер id пользователя
+ * @param array $params - параметры запроса
  * @param @con - информация для соединения с БД
  * @return mysqli_result - результат подготовленного выражения
  */
-function getUserStmtResult(string $sqlQuery, string $id, $con): mysqli_result
+function getUserStmtResult(string $sqlQuery, array $params, $con): mysqli_result
 {
-    $preparedStatement = dbGetPrepareStmt($con, $sqlQuery, ["id" => $id]);
+    $preparedStatement = dbGetPrepareStmt($con, $sqlQuery, $params);
     mysqli_stmt_execute($preparedStatement);
 
     return mysqli_stmt_get_result($preparedStatement);
@@ -87,16 +87,23 @@ function makeConnection(array $db): mysqli
 }
 
 /**
- * Возвращает массив проектов из БД
+ * Возвращает массив всех проектов из БД
  * @param mysqli $con - объект подключения к БД
- * @param int $id - номер айди пользователя
+ * @param int $userId - номер айди пользователя
  * @return array - массив проектов
  */
-function getProjects(mysqli $con, int $id): array
+function getProjects(mysqli $con, int $userId): array
 {
-    $selectProjectsById = "SELECT id, name FROM projects WHERE user_id = ?";
+    $selectProjectsById =
+        "SELECT p.id, p.name, COUNT(t.name) AS amount
+            FROM projects AS p
+            LEFT JOIN tasks AS t ON t.project_id = p.id
+            WHERE
+                p.user_id = ?
+            GROUP BY
+                p.id, p.name;";
 
-    $result = getUserStmtResult($selectProjectsById, $id, $con);
+    $result = getUserStmtResult($selectProjectsById, ["user_id" => $userId], $con);
     if ($result) {
         $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
@@ -111,10 +118,10 @@ function getProjects(mysqli $con, int $id): array
 /**
  * Возвращает массив задач из БД
  * @param mysqli $con - объект подключения к БД
- * @param int $id - номер айди пользователя
+ * @param int $userId - номер айди пользователя
  * @return array - массив задач
  */
-function getTasks(mysqli $con, int $id): array
+function getTasksAll(mysqli $con, int $userId): array
 {
     $selectTasksById =
     "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished
@@ -123,7 +130,35 @@ function getTasks(mysqli $con, int $id): array
     WHERE t.user_id = ?";
 
 
-    $result = getUserStmtResult($selectTasksById, $id, $con);
+    $result = getUserStmtResult($selectTasksById, ["user_id" => $userId], $con);
+    if ($result) {
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    return $tasks;
+}
+
+/**
+ * Возвращает массив задач из БД соотвествующего $projectId
+ * @param mysqli $con - объект подключения к БД
+ * @param int $userId - номер айди пользователя
+ * @param int $projectId - номер айди проекта
+ * @return array - массив задач
+ */
+function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
+{
+    $selectTasksById =
+    "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished
+    FROM tasks AS t
+    JOIN projects AS p ON t.project_id = p.id
+    WHERE t.user_id = ? AND p.id = ?";
+
+
+    $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "project_id" => $projectId], $con);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
