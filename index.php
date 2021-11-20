@@ -20,7 +20,9 @@ if ($projectId) {
     $tasks = getTasksAll($con, $userId);
 }
 
-if (empty($tasks)) {
+$isProjectExist = in_array($projectId, array_column($projects, "id"));
+
+if ($projectId !== null && $isProjectExist === false) {
     http_response_code(404);
     exit();
 }
