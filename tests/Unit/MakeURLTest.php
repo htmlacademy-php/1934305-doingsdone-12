@@ -18,6 +18,6 @@ class MakeURLTest extends TestCase
             "id" => 1
         ]));
 
-        $this->assertEquals("/index.php?", makeURL("index.php", []));
+        $this->assertEquals("/index.php", makeURL("index.php", []));
     }
 }
