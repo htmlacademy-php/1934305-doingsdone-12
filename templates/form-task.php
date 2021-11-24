@@ -14,7 +14,11 @@
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
 
                 <select class="form__input form__input--select" name="project" id="project">
-                    <option value="">Входящие</option>
+                    <?php
+                    foreach ($projects as $project) : ?>
+                        <option value="<?= $project["name"] ?>"><?= $project["name"] ?></option>
+                    <?php
+                    endforeach; ?>
                 </select>
             </div>
 

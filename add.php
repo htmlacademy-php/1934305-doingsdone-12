@@ -14,7 +14,8 @@ $projectsSide = includeTemplate("projects-side.php", [
 ]);
 
 $pageContent = includeTemplate("form-task.php", [
-    "projectsSide" => $projectsSide
+    "projectsSide" => $projectsSide,
+    "projects" => $projects
 ]);
 
 $layoutContent = includeTemplate("layout.php", [
