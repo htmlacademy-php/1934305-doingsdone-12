@@ -98,3 +98,56 @@ function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
 
     return false;
 }
+
+/**
+ * Проверяет строку на пустоту. Возвращает сообщение об ошибке или null
+ * @param string $value строка из формы
+ * @return string|null сообщение об ошибке или null
+ */
+function validateTaskName(string $value): ?string
+{
+    return (mb_strlen(trim($value)) <= 255) ? null : "Название не должно превышать размер в 255 символов";
+}
+
+/**
+ * Проверяет является ли выбранное имя проекта существующим для этого пользователя.
+ * Возвращает сообщение об ошибке или null
+ * @param int $id номер проекта из формы
+ * @param array $projectsId массив id проектов
+ * @return string|null сообщение об ошибке или null
+ */
+function validateProject(int $id, array $projectsId): ?string
+{
+    if (!in_array($id, $projectsId)) {
+        return "Указан несуществующий проект";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет правильность формата введённой даты
+ * @param string $dateStr дата в строковом представлении
+ * @return string|null сообщение об ошибке или null
+ */
+function validateDate(string $dateStr): ?string
+{
+    return isDateValid($dateStr) ? null : "Неверный формат даты";
+}
+
+/**
+ * Маппит название ключа с английского на русский вариант для вывода сообщения пользователю
+ * @param string $key имя ключа поля
+ * @return string название поля на русском
+ */
+function mapKeyToFieldName(string $key): string
+{
+    switch ($key) {
+        case "project_id":
+            return "проект";
+        case "date":
+            return "дата выполнения";
+        case "name":
+            return "название";
+    }
+}
