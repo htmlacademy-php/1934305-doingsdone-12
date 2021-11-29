@@ -20,7 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($taskForm as $key => $value) {
         switch ($key) {
             case "project_id":
-                $errors[$key] = validateProject($value, $projectsId);
+                // приравниваю значение $value к инту, чтобы если кто-то попытается отправить форму
+                // с пустым значением или строку она $value просто преобразовался бы в 0
+                $errors[$key] = validateProject((int) $value, $projectsId);
                 break;
             case "name":
                 $errors[$key] = validateTaskName($value);
@@ -34,8 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // TODO: обработать тип файла. Возвращать ощибку формы, если файл не загрузился
     // TODO: после загрузки файла сгенерировать хеш для сохранения уникальности файла
     $errors = array_filter($errors);
-
-
 }
 
 $projectsSideTemplate = includeTemplate("projects-side.php", [
