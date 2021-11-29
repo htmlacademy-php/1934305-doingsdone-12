@@ -1,3 +1,7 @@
+<?php
+/* @var string $error
+*/
+?>
 <main class="content">
     <div class="content__main-col">
         <header class="content__header">

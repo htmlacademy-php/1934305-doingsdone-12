@@ -1,9 +1,14 @@
+<?php
+/* @var string $projectsSideTemplate
+ * @var array $projects
+ */
+?>
 <div class="content">
-    <?= $projectsSide ?>
+    <?= $projectsSideTemplate ?>
     <main class="content__main">
         <h2 class="content__main-heading">Добавление задачи</h2>
 
-        <form class="form" method="post" autocomplete="off">
+        <form class="form" method="post" autocomplete="off" enctype="multipart/form-data">
             <div class="form__row">
                 <label class="form__label" for="name">Название <sup>*</sup></label>
                 <?php

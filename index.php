@@ -1,4 +1,6 @@
 <?php
+/* @var mysqli $con
+ */
 
 require_once("init.php");
 
@@ -25,14 +27,14 @@ if ($projectId !== null && $isProjectExist === false) {
     exit();
 }
 
-$projectsSide = includeTemplate("projects-side.php", [
+$projectsSideTemplate = includeTemplate("projects-side.php", [
     "projects" => $projects,
     "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
     "projectId" => $projectId
 ]);
 
 $pageContent = includeTemplate("main.php", [
-    "projectsSide" => $projectsSide,
+    "projectsSideTemplate" => $projectsSideTemplate,
     "tasks" => $tasks,
     "showCompleteTasks" => $showCompleteTasks,
 ]);

@@ -1,4 +1,6 @@
 <?php
+/* @var mysqli $con
+*/
 
 require_once("init.php");
 
@@ -25,31 +27,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     ];
 
+    // TODO: переименовать в $taskForm
     $task = filter_input_array(INPUT_POST);
-
+    // TODO: избавиться от коллбеков и вызывать функции валидаций явно
     foreach ($task as $key => $value) {
         if (isset($rules[$key])) {
             $rule = $rules[$key];
             $errors[$key] = $rule($value);
         }
 
+        //TODO: проверять на заполненность в отдельных функциях
         if (in_array($key, $required) && empty(trim($value))) {
             $errors[$key] = "Поле " . mapKeyToFieldName($key) . " надо заполнить";
         }
     }
-
+    // TODO: обработать тип файла. Возвращать ощибку формы, если файл не загрузился
+    // TODO: после загрузки файла сгенерировать хеш для сохранения уникальности файла
     $errors = array_filter($errors);
+
 
 }
 
-$projectsSide = includeTemplate("projects-side.php", [
+$projectsSideTemplate = includeTemplate("projects-side.php", [
     "projects" => $projects,
     "scriptName" => pathinfo("index.php", PATHINFO_BASENAME),
     "projectId" => $projectId
 ]);
 
 $pageContent = includeTemplate("form-task.php", [
-    "projectsSide" => $projectsSide,
+    "projectsSideTemplate" => $projectsSideTemplate,
     "projects" => $projects,
     "errors" => $errors
 ]);
