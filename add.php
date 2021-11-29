@@ -15,30 +15,20 @@ $errors = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $required = ["project_id", "name", "date"];
 
-    $rules = [
-        "project_id" => function ($value) use ($projectsId) {
-            return validateProject($value, $projectsId);
-        },
-        "name" => function ($value) {
-            return validateTaskName($value);
-        },
-        "date" => function ($value) {
-            return validateDate($value);
-        }
-    ];
+    $taskForm = filter_input_array(INPUT_POST);
 
-    // TODO: переименовать в $taskForm
-    $task = filter_input_array(INPUT_POST);
-    // TODO: избавиться от коллбеков и вызывать функции валидаций явно
-    foreach ($task as $key => $value) {
-        if (isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule($value);
-        }
-
-        //TODO: проверять на заполненность в отдельных функциях
-        if (in_array($key, $required) && empty(trim($value))) {
-            $errors[$key] = "Поле " . mapKeyToFieldName($key) . " надо заполнить";
+    foreach ($taskForm as $key => $value) {
+        switch ($key) {
+            case "project_id":
+                $errors[$key] = validateProject($value, $projectsId);
+                break;
+            case "name":
+                $errors[$key] = validateTaskName($value);
+                break;
+            case "date":
+                $errors[$key] = validateDate($value);
+                break;
+            default:
         }
     }
     // TODO: обработать тип файла. Возвращать ощибку формы, если файл не загрузился

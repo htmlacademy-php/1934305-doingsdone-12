@@ -106,7 +106,15 @@ function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
  */
 function validateTaskName(string $value): ?string
 {
-    return (mb_strlen(trim($value)) <= 255) ? null : "Название не должно превышать размер в 255 символов";
+    $valueLen = mb_strlen(trim($value));
+
+    if ($valueLen == 0) {
+        return "Поле название надо заполнить";
+    } elseif ($valueLen > 255) {
+        return "Название не должно превышать размер в 255 символов";
+    } else {
+        return null;
+    }
 }
 
 /**
@@ -132,22 +140,11 @@ function validateProject(int $id, array $projectsId): ?string
  */
 function validateDate(string $dateStr): ?string
 {
-    return isDateValid($dateStr) ? null : "Неверный формат даты";
-}
-
-/**
- * Маппит название ключа с английского на русский вариант для вывода сообщения пользователю
- * @param string $key имя ключа поля
- * @return string название поля на русском
- */
-function mapKeyToFieldName(string $key): string
-{
-    switch ($key) {
-        case "project_id":
-            return "проект";
-        case "date":
-            return "дата выполнения";
-        case "name":
-            return "название";
+    if (isDateValid($dateStr) == false) {
+        return "Неверный формат даты";
+    } elseif (date_create()->format("Y-m-d") > $dateStr) {
+        return "Выбранная дата должна быть больше или равна текущей";
+    } else {
+        return null;
     }
 }
