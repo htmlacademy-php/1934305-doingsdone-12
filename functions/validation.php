@@ -140,7 +140,9 @@ function validateProject(int $id, array $projectsId): ?string
  */
 function validateDate(string $dateStr): ?string
 {
-    if (isDateValid($dateStr) == false) {
+    if (empty(trim($dateStr))) {
+        return null;
+    } elseif (isDateValid($dateStr) == false) {
         return "Неверный формат даты";
     } elseif (date_create()->format("Y-m-d") > $dateStr) {
         return "Выбранная дата должна быть больше или равна текущей";

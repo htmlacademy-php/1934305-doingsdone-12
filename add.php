@@ -36,6 +36,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // TODO: обработать тип файла. Возвращать ощибку формы, если файл не загрузился
     // TODO: после загрузки файла сгенерировать хеш для сохранения уникальности файла
     $errors = array_filter($errors);
+    if (!empty($_FILES["file"]["name"]) && empty($errors)) {
+        $path = $_FILES["file"]["tmp_name"];
+        $filename = uniqid() . "__" . $_FILES["file"]["name"];
+
+        $isMoved = move_uploaded_file($path, "uploads/" . $filename);
+
+        if ($isMoved == false) {
+            $errors["file"] = "Ошибка загрузки файла";
+        }
+
+        $taskForm["path"] = "uploads/" . $filename;
+    }
 }
 
 $projectsSideTemplate = includeTemplate("projects-side.php", [
