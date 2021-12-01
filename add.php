@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errors[$key] = validateTaskName($value);
                 break;
             case "end_time":
-                $errors[$key] = validateDate($value);
+                $errors[$key] = validateDate($value, date_create()->format("Y-m-d"));
                 break;
             default:
         }

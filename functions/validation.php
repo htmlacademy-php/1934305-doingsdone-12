@@ -136,15 +136,16 @@ function validateProject(int $id, array $projectsId): ?string
 /**
  * Проверяет правильность формата введённой даты
  * @param string $dateStr дата в строковом представлении
+ * @param string $curDate текущая дата в строковом представлении
  * @return string|null сообщение об ошибке или null
  */
-function validateDate(string $dateStr): ?string
+function validateDate(string $dateStr, string $curDate): ?string
 {
     if (empty(trim($dateStr))) {
         return null;
     } elseif (isDateValid($dateStr) == false) {
         return "Неверный формат даты";
-    } elseif (date_create()->format("Y-m-d") > $dateStr) {
+    } elseif ($curDate > $dateStr) {
         return "Выбранная дата должна быть больше или равна текущей";
     } else {
         return null;
