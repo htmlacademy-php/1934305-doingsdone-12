@@ -124,7 +124,7 @@ function getProjects(mysqli $con, int $userId): array
 function getTasksAll(mysqli $con, int $userId): array
 {
     $selectTasksById =
-    "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished
+        "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ?";
@@ -152,7 +152,7 @@ function getTasksAll(mysqli $con, int $userId): array
 function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
 {
     $selectTasksById =
-    "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished
+        "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND p.id = ?";
@@ -168,4 +168,24 @@ function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
     }
 
     return $tasks;
+}
+
+/**
+ * Создаёт новую задачу в БД
+ * @param mysqli $con - объект подключения к БД
+ * @param array $taskForm - задача принятая из формы
+ * @return bool - результат выполнения запроса к БД
+ */
+function createNewTask(mysqli $con, array $taskForm): bool
+{
+    if ($taskForm["end_time"] === "") {
+        $taskForm["end_time"] = null;
+    }
+
+    $sqlQuery = "INSERT INTO tasks (name, project_id, end_time, user_id, file, creation_time)
+                    VALUES (?, ?, ?, ?, ?, NOW())";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, $taskForm);
+
+    return mysqli_stmt_execute($stmt);
 }

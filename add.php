@@ -13,9 +13,9 @@ $projectsId = array_column($projects, "id");
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $required = ["project_id", "name", "date"];
-
     $taskForm = filter_input_array(INPUT_POST);
+    $taskForm["user_id"] = $userId;
+    $taskForm["file"] = "";
 
     foreach ($taskForm as $key => $value) {
         switch ($key) {
@@ -27,15 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             case "name":
                 $errors[$key] = validateTaskName($value);
                 break;
-            case "date":
+            case "end_time":
                 $errors[$key] = validateDate($value);
                 break;
             default:
         }
     }
-    // TODO: обработать тип файла. Возвращать ощибку формы, если файл не загрузился
-    // TODO: после загрузки файла сгенерировать хеш для сохранения уникальности файла
-    $errors = array_filter($errors);
+
     if (!empty($_FILES["file"]["name"]) && empty($errors)) {
         $path = $_FILES["file"]["tmp_name"];
         $filename = uniqid() . "__" . $_FILES["file"]["name"];
@@ -46,8 +44,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors["file"] = "Ошибка загрузки файла";
         }
 
-        $taskForm["path"] = "uploads/" . $filename;
+        $taskForm["file"] = "uploads/" . $filename;
     }
+
+    if (empty($errors)) {
+        $res = createNewTask($con, $taskForm);
+
+        if ($res) {
+            header("Location: index.php");
+        } else {
+            $mysqliError = mysqli_error($con);
+            renderError($mysqliError);
+            exit();
+        }
+    }
+    $errors = array_filter($errors);
 }
 
 $projectsSideTemplate = includeTemplate("projects-side.php", [

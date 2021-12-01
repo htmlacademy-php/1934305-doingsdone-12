@@ -3,6 +3,7 @@
  * @var int $showCompleteTasks
  * @var array $tasks
  */
+
 ?>
 
 <div class="content">
@@ -57,7 +58,15 @@
                         </label>
                     </td>
                     <td class="task__file">
-                        <a class="download-link" href="#">Home.psd</a>
+                        <?php
+                        if ($task["file"]) : ?>
+                            <a class="download-link" href="<?= esc($task["file"]) ?>"><?= str_replace(
+                                    "uploads/",
+                                    "",
+                                    esc($task["file"])
+                                ) ?></a>
+                        <?php
+                        endif; ?>
                     </td>
                     <td class="task__date"><?= esc($task["date"]) ?></td>
                 </tr>

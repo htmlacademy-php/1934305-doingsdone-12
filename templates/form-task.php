@@ -43,13 +43,13 @@
             <div class="form__row">
                 <label class="form__label" for="date">Дата выполнения</label>
                 <?php
-                $className = isset($errors["date"]) ? "form__input--error" : "" ?>
-                <input class="form__input form__input--date <?= $className ?>" type="text" name="date" id="date"
+                $className = isset($errors["end_time"]) ? "form__input--error" : "" ?>
+                <input class="form__input form__input--date <?= $className ?>" type="text" name="end_time" id="date"
                        value=""
                        placeholder="Введите дату в формате ГГГГ-ММ-ДД">
                                 <?php
-                if (isset($errors["date"])) : ?>
-                    <p class="form__message"> <?= $errors["date"] ?> </p>
+                if (isset($errors["end_time"])) : ?>
+                    <p class="form__message"> <?= $errors["end_time"] ?> </p>
                 <?php
                 endif ?>
             </div>
