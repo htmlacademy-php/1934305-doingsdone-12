@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    $errors = array_filter($errors);
     if (!empty($_FILES["file"]["name"]) && empty($errors)) {
         $path = $_FILES["file"]["tmp_name"];
         $filename = uniqid() . "__" . $_FILES["file"]["name"];
@@ -47,8 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $taskForm["file"] = "uploads/" . $filename;
     }
 
-    $errors = array_filter($errors);
-
     if (empty($errors)) {
         $res = createNewTask($con, $taskForm);
 
@@ -57,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $mysqliError = mysqli_error($con);
             renderError($mysqliError);
+            unlink($taskForm["file"]);
             exit();
         }
     }
