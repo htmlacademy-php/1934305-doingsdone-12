@@ -47,6 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $taskForm["file"] = "uploads/" . $filename;
     }
 
+    $errors = array_filter($errors);
+
     if (empty($errors)) {
         $res = createNewTask($con, $taskForm);
 
@@ -58,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
-    $errors = array_filter($errors);
 }
 
 $projectsSideTemplate = includeTemplate("projects-side.php", [
