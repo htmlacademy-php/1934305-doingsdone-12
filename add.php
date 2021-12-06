@@ -12,40 +12,22 @@ $projects = getProjects($con, $userId);
 $projectsId = array_column($projects, "id");
 
 $errors = [];
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $taskForm = filter_input_array(INPUT_POST);
     $taskForm["user_id"] = $userId;
     $taskForm["file"] = "";
 
-    foreach ($taskForm as $key => $value) {
-        switch ($key) {
-            case "project_id":
-                // приравниваю значение $value к инту, чтобы если кто-то попытается отправить форму
-                // с пустым значением или строку она $value просто преобразовался бы в 0
-                $errors[$key] = validateProject((int) $value, $projectsId);
-                break;
-            case "name":
-                $errors[$key] = validateTaskName($value);
-                break;
-            case "end_time":
-                $errors[$key] = validateDate($value, date_create()->format("Y-m-d"));
-                break;
-            default:
-        }
-    }
-
+    $errors = validateTaskForm($taskForm, $projectsId);
     $errors = array_filter($errors);
+
     if (!empty($_FILES["file"]["name"]) && empty($errors)) {
-        $path = $_FILES["file"]["tmp_name"];
-        $filename = uniqid() . "__" . $_FILES["file"]["name"];
+        $pathFile = validateFileUpload();
 
-        $isMoved = move_uploaded_file($path, "uploads/" . $filename);
-
-        if ($isMoved == false) {
+        if ($pathFile === null) {
             $errors["file"] = "Ошибка загрузки файла";
+        } else {
+            $taskForm["file"] = $pathFile;
         }
-
-        $taskForm["file"] = "uploads/" . $filename;
     }
 
     if (empty($errors)) {

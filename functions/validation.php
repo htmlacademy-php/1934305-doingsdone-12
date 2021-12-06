@@ -151,3 +151,39 @@ function validateDate(string $dateStr, string $curDate): ?string
         return null;
     }
 }
+
+/**
+ * Проверяет данные введённые из формы на ошибки
+ * @param array $taskForm массив данных введённых из формы
+ * @param array $projectsId массив id проектов для валидации
+ * @return array массив ошибок
+ */
+function validateTaskForm(array $taskForm, array $projectsId): array
+{
+    $errors = [];
+    // приравниваю значение $value к инту, чтобы если кто-то попытается отправить форму
+    // с пустым значением или строку она $value просто преобразовался бы в 0
+    $errors["project_id"] = validateProject((int)$taskForm["project_id"], $projectsId);
+    $errors["name"] = validateTaskName($taskForm["name"]);
+    $errors["end_time"] = validateDate($taskForm["end_time"], date_create()->format("Y-m-d"));
+
+    return $errors;
+}
+
+/**
+ * Генерирурет уникальное имя загруженному файлу и переносит его из временной папки в папку проекта
+ * @return string|null путь загруженного файла или null
+ */
+function validateFileUpload(): ?string
+{
+        $path = $_FILES["file"]["tmp_name"];
+        $filename = uniqid() . "__" . $_FILES["file"]["name"];
+
+        $isMoved = move_uploaded_file($path, "uploads/" . $filename);
+
+        if ($isMoved === false) {
+            return null;
+        }
+
+        return "uploads/" . $filename;
+}

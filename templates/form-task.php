@@ -2,6 +2,7 @@
 /* @var string $projectsSideTemplate
  * @var array $projects
  */
+
 ?>
 <div class="content">
     <?= $projectsSideTemplate ?>
@@ -13,7 +14,8 @@
                 <label class="form__label" for="name">Название <sup>*</sup></label>
                 <?php
                 $className = isset($errors["name"]) ? "form__input--error" : "" ?>
-                <input class="form__input <?= $className ?>" type="text" name="name" id="name" value=""
+                <input class="form__input <?= $className ?>" type="text" name="name" id="name"
+                       value="<?= getPostVal("name"); ?>"
                        placeholder="Введите название">
                 <?php
                 if (isset($errors["name"])) : ?>
@@ -33,7 +35,7 @@
                     <?php
                     endforeach; ?>
                 </select>
-                                <?php
+                <?php
                 if (isset($errors["project_id"])) : ?>
                     <p class="form__message"> <?= $errors["project_id"] ?> </p>
                 <?php
@@ -45,9 +47,9 @@
                 <?php
                 $className = isset($errors["end_time"]) ? "form__input--error" : "" ?>
                 <input class="form__input form__input--date <?= $className ?>" type="text" name="end_time" id="date"
-                       value=""
+                       value="<?= getPostVal("end_time"); ?>"
                        placeholder="Введите дату в формате ГГГГ-ММ-ДД">
-                                <?php
+                <?php
                 if (isset($errors["end_time"])) : ?>
                     <p class="form__message"> <?= $errors["end_time"] ?> </p>
                 <?php
