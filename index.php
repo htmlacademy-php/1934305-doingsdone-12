@@ -1,11 +1,11 @@
 <?php
+/* @var mysqli $con
+ */
 
 require_once("init.php");
 
 $showCompleteTasks = 1;
 $title = "Дела в порядке";
-
-$con = makeConnection($config["db"]);
 
 $userId = 1; // Сейчас пока 1, потом заменю на $_GET
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
@@ -27,17 +27,22 @@ if ($projectId !== null && $isProjectExist === false) {
     exit();
 }
 
-$pageContent = includeTemplate("main.php", [
+$projectsSideTemplate = includeTemplate("projects-side.php", [
     "projects" => $projects,
-    "tasks" => $tasks,
-    "showCompleteTasks" => $showCompleteTasks,
     "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
     "projectId" => $projectId
 ]);
 
+$pageContent = includeTemplate("main.php", [
+    "projectsSideTemplate" => $projectsSideTemplate,
+    "tasks" => $tasks,
+    "showCompleteTasks" => $showCompleteTasks,
+]);
+
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
-    "title" => $title
+    "title" => $title,
+    "addScript" => pathinfo("add.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);

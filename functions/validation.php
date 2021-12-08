@@ -98,3 +98,92 @@ function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
 
     return false;
 }
+
+/**
+ * Проверяет строку на пустоту. Возвращает сообщение об ошибке или null
+ * @param string $value строка из формы
+ * @return string|null сообщение об ошибке или null
+ */
+function validateTaskName(string $value): ?string
+{
+    $valueLen = mb_strlen(trim($value));
+
+    if ($valueLen == 0) {
+        return "Поле название надо заполнить";
+    } elseif ($valueLen > 255) {
+        return "Название не должно превышать размер в 255 символов";
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Проверяет является ли выбранное имя проекта существующим для этого пользователя.
+ * Возвращает сообщение об ошибке или null
+ * @param int $id номер проекта из формы
+ * @param array $projectsId массив id проектов
+ * @return string|null сообщение об ошибке или null
+ */
+function validateProject(int $id, array $projectsId): ?string
+{
+    if (!in_array($id, $projectsId)) {
+        return "Указан несуществующий проект";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет правильность формата введённой даты
+ * @param string $dateStr дата в строковом представлении
+ * @param string $curDate текущая дата в строковом представлении
+ * @return string|null сообщение об ошибке или null
+ */
+function validateDate(string $dateStr, string $curDate): ?string
+{
+    if (empty(trim($dateStr))) {
+        return null;
+    } elseif (isDateValid($dateStr) == false) {
+        return "Неверный формат даты";
+    } elseif ($curDate > $dateStr) {
+        return "Выбранная дата должна быть больше или равна текущей";
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Проверяет данные введённые из формы на ошибки
+ * @param array $taskForm массив данных введённых из формы
+ * @param array $projectsId массив id проектов для валидации
+ * @return array массив ошибок
+ */
+function validateTaskForm(array $taskForm, array $projectsId): array
+{
+    $errors = [];
+    // приравниваю значение $value к инту, чтобы если кто-то попытается отправить форму
+    // с пустым значением или строку она $value просто преобразовался бы в 0
+    $errors["project_id"] = validateProject((int)$taskForm["project_id"], $projectsId);
+    $errors["name"] = validateTaskName($taskForm["name"]);
+    $errors["end_time"] = validateDate($taskForm["end_time"], date_create()->format("Y-m-d"));
+
+    return $errors;
+}
+
+/**
+ * Генерирурет уникальное имя загруженному файлу и переносит его из временной папки в папку проекта
+ * @return string|null путь загруженного файла или null
+ */
+function validateFileUpload(): ?string
+{
+        $path = $_FILES["file"]["tmp_name"];
+        $filename = uniqid() . "__" . $_FILES["file"]["name"];
+
+        $isMoved = move_uploaded_file($path, "uploads/" . $filename);
+
+        if ($isMoved === false) {
+            return null;
+        }
+
+        return "uploads/" . $filename;
+}

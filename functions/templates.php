@@ -44,7 +44,8 @@ function renderError($error)
     $errContent = includeTemplate("error.php", ["error" => $error]);
     $layoutContent = includeTemplate("layout.php", [
         "content" => $errContent,
-        "title" => "Ошибка соединения"
+        "title" => "Ошибка соединения",
+        "addScript" => pathinfo("add.php", PATHINFO_BASENAME)
     ]);
 
     print($layoutContent);
