@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use Faker\Provider\ru_ru\Text;
+use Faker\Provider\ru_RU\Text;
 use PHPUnit\Framework\TestCase;
 
 
@@ -19,6 +19,6 @@ class ValidateTaskNameTest extends TestCase
         $this->assertEquals("Название не должно превышать размер в 255 символов", validateTaskName($superLongWord));
         $this->assertEquals("Поле название надо заполнить", validateTaskName($onlySpacesWord));
         $this->assertEquals(null, validateTaskName($shortWord));
-        $this->assertEquals(null, $shortWithSpacesWord);
+        $this->assertEquals(null, validateTaskName($shortWithSpacesWord));
     }
 }
