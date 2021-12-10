@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit;
+namespace Tests\Unit;
 
 use Faker\Provider\ru_ru\Text;
 use PHPUnit\Framework\TestCase;
