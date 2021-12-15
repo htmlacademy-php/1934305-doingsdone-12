@@ -2,7 +2,7 @@
 /* @var mysqli $con
  */
 
-require_once("init.php");
+require_once "init.php";
 
 $showCompleteTasks = 1;
 $title = "Дела в порядке";
