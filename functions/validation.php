@@ -187,3 +187,24 @@ function validateFileUpload(): ?string
 
         return "uploads/" . $filename;
 }
+
+/**
+ * Проверяет на корректность введёный email адрес из формы
+ * @param string $email -- введённый email адрес пользователем
+ * @param array $emails -- массив всех уже записанных email адресов из БД
+ * @return string|null сообщение об ошибке или null
+ */
+function validateEmail(string $email, array $emails): ?string
+{
+    $email = trim($email);
+
+    if (mb_strlen($email) > 255) {
+        return "E-mail адрес слишком длинный";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "E-mail введён некорректно";
+    } elseif (in_array($email, $emails)) {
+        return "Данный E-mail адрес уже занят";
+    } else {
+        return null;
+    }
+}
