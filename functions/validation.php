@@ -161,8 +161,8 @@ function validateDate(string $dateStr, string $curDate): ?string
 function validateTaskForm(array $taskForm, array $projectsId): array
 {
     $errors = [];
-    // приравниваю значение $value к инту, чтобы если кто-то попытается отправить форму
-    // с пустым значением или строку она $value просто преобразовался бы в 0
+    // приравниваю значение из $taskForm к инту, чтобы если кто-то попытается отправить форму
+    // с пустым значением или строку это значение просто преобразовалось бы к 0
     $errors["project_id"] = validateProject((int)$taskForm["project_id"], $projectsId);
     $errors["name"] = validateTaskName($taskForm["name"]);
     $errors["end_time"] = validateDate($taskForm["end_time"], date_create()->format("Y-m-d"));
