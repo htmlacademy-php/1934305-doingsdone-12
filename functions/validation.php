@@ -226,3 +226,23 @@ function validateUserName(string $userName): ?string
         return null;
     }
 }
+
+/**
+ * Проверяет на корректность введённый пароль из формы
+ * @param string $password -- введённый пароль
+ * @return string|null сообщение об ошибке или null
+ */
+function validatePassword(string $password): ?string
+{
+    $password = trim($password);
+
+    if (strpos($password, " ") !== false) {
+        return "Пароль не должен содержать пробельные символы";
+    } elseif (mb_strlen($password) < 8) {
+        return "Пароль должен содержать минимум 8 символов";
+    } elseif (mb_strlen($password) > 60) {
+        return "Пароль не должен превышать лимит 60-ти символов";
+    } else {
+        return null;
+    }
+}
