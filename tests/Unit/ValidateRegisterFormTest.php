@@ -21,7 +21,7 @@ class ValidateRegisterFormTest extends TestCase
         $emptyUserName = "    ";
         $emptyPassword = "   ";
         $emptyEmail = "   ";
-        $expected = ["email" => "E-mail введён некорректно", "password" => "Пароль должен содержать минимум 8 символов", "name" => "Введите имя пользователя"];
+        $expected = ["email" => "E-mail введён некорректно", "password" => "Пароль не должен содержать пробельные символы", "name" => "Введите имя пользователя"];
         $testRegisterForm = ["email" => $emptyEmail, "password" => $emptyPassword, "name" => $emptyUserName];
         $this->assertEquals($expected, validateRegisterForm($testRegisterForm, ["1234@mail.ru", "505@mail.ru"]));
 

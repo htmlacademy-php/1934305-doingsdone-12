@@ -18,7 +18,7 @@ class ValidatePasswordTest extends TestCase
         $this->assertEquals("Пароль не должен превышать лимит 60-ти символов", validatePassword($superLongPassword));
         $this->assertEquals("Пароль не должен содержать пробельные символы", validatePassword($passwordWithWhiteSpace));
         $this->assertEquals("Пароль должен содержать минимум 8 символов", validatePassword($passwordWithLessEightChars));
-        $this->assertEquals(null, validatePassword($whiteSpacedPassword));
+        $this->assertEquals("Пароль не должен содержать пробельные символы", validatePassword($whiteSpacedPassword));
         $this->assertEquals(null, validatePassword($acceptedPassword));
     }
 }

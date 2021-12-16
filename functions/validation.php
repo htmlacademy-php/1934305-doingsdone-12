@@ -234,8 +234,6 @@ function validateUserName(string $userName): ?string
  */
 function validatePassword(string $password): ?string
 {
-    $password = trim($password);
-
     if (strpos($password, " ") !== false) {
         return "Пароль не должен содержать пробельные символы";
     } elseif (mb_strlen($password) < 8) {
