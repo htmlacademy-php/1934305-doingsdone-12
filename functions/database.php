@@ -216,3 +216,21 @@ function getEmailsFromDB(mysqli $con): array
         return $elm["email"];
     }, $emails);
 }
+
+/**
+ * Создаёт нового пользователя в БД
+ * @param mysqli $con - объект подключения к БД
+ * @param array $registerForm - данные пользователя для регистрации из формы
+ * @return bool - результат выполнения запроса к БД
+ */
+function createNewUser(mysqli $con, array $registerForm): bool
+{
+    $password = password_hash($registerForm["password"], PASSWORD_DEFAULT);
+
+    $sqlQuery = "INSERT INTO users (registration_time, email, password, name)
+                    VALUES (NOW(), ?, ?, ?)";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, [$registerForm["email"], $password, $registerForm["name"]]);
+
+    return mysqli_stmt_execute($stmt);
+}
