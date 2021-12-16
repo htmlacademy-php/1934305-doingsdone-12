@@ -189,3 +189,30 @@ function createNewTask(mysqli $con, array $taskForm): bool
 
     return mysqli_stmt_execute($stmt);
 }
+
+/**
+ * Возвращает почтовые адреса из БД
+ * @param mysqli $con - объект подключения к БД
+ * @return array - массив данных почтовых адресов пользователей
+ */
+function getEmailsFromDB(mysqli $con): array
+{
+    $sqlQuery = "SELECT email FROM users";
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, []);
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result) {
+        $emails = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    return array_map(function ($elm) {
+        return $elm["email"];
+    }, $emails);
+}
