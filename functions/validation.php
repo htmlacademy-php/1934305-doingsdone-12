@@ -208,3 +208,21 @@ function validateEmail(string $email, array $emails): ?string
         return null;
     }
 }
+
+/**
+ * Проверяет на корректность введённое имя пользователя из формы
+ * @param string $userName -- введённое имя пользователем
+ * @return string|null сообщение об ошибке или null
+ */
+function validateUserName(string $userName): ?string
+{
+    $userName = trim($userName);
+
+    if (mb_strlen($userName) === 0) {
+        return "Введите имя пользователя";
+    } elseif (mb_strlen($userName) > 70) {
+        return "Слишком длинное имя";
+    } else {
+        return null;
+    }
+}
