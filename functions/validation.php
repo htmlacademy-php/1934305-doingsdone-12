@@ -246,3 +246,19 @@ function validatePassword(string $password): ?string
         return null;
     }
 }
+
+/**
+ * Проверяет данные введённые из формы на ошибки
+ * @param array $registerForm массив данных введённых из формы
+ * @param array $emails -- почтовые адресы из полученные из БД
+ * @return array массив ошибок
+ */
+function validateRegisterForm(array $registerForm, array $emails): array
+{
+    $errors = [];
+    $errors["email"] = validateEmail($registerForm["email"], $emails);
+    $errors["password"] = validatePassword($registerForm["password"]);
+    $errors["name"] = validateUserName($registerForm["name"]);
+
+    return $errors;
+}
