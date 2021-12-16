@@ -6,7 +6,27 @@ require_once "init.php";
 
 $title = "Дела в порядке";
 
-$pageContent = includeTemplate("register-form.php", []);
+$errors = [];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $registerForm = filter_input_array(INPUT_POST);
+    $emailsFromDB = getEmailsFromDB($con);
+    $errors = validateRegisterForm($registerForm, $emailsFromDB);
+    $errors = array_filter($errors);
+
+    if (empty($errors)) {
+        $res = createNewUser($con, $registerForm);
+
+        if ($res) {
+            header("Location: index.php");
+        } else {
+            $mysqliError = mysqli_error($con);
+            renderError($mysqliError);
+            exit();
+        }
+    }
+}
+
+$pageContent = includeTemplate("register-form.php", ["errors" => $errors]);
 
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
