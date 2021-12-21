@@ -110,11 +110,13 @@ function validateTaskName(string $value): ?string
 
     if ($valueLen == 0) {
         return "Поле название надо заполнить";
-    } elseif ($valueLen > 255) {
-        return "Название не должно превышать размер в 255 символов";
-    } else {
-        return null;
     }
+
+    if ($valueLen > 255) {
+        return "Название не должно превышать размер в 255 символов";
+    }
+
+    return null;
 }
 
 /**
@@ -143,13 +145,17 @@ function validateDate(string $dateStr, string $curDate): ?string
 {
     if (empty(trim($dateStr))) {
         return null;
-    } elseif (isDateValid($dateStr) == false) {
-        return "Неверный формат даты";
-    } elseif ($curDate > $dateStr) {
-        return "Выбранная дата должна быть больше или равна текущей";
-    } else {
-        return null;
     }
+
+    if (isDateValid($dateStr) == false) {
+        return "Неверный формат даты";
+    }
+
+    if ($curDate > $dateStr) {
+        return "Выбранная дата должна быть больше или равна текущей";
+    }
+
+    return null;
 }
 
 /**
@@ -200,13 +206,17 @@ function validateEmail(string $email, bool $isEmailInDB): ?string
 
     if (mb_strlen($email) > 255) {
         return "E-mail адрес слишком длинный";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        return "E-mail введён некорректно";
-    } elseif ($isEmailInDB === true) {
-        return "Данный E-mail адрес уже занят";
-    } else {
-        return null;
     }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "E-mail введён некорректно";
+    }
+
+    if ($isEmailInDB === true) {
+        return "Данный E-mail адрес уже занят";
+    }
+
+    return null;
 }
 
 /**
@@ -220,11 +230,13 @@ function validateUserName(string $userName): ?string
 
     if (mb_strlen($userName) === 0) {
         return "Введите имя пользователя";
-    } elseif (mb_strlen($userName) > 70) {
-        return "Слишком длинное имя";
-    } else {
-        return null;
     }
+
+    if (mb_strlen($userName) > 70) {
+        return "Слишком длинное имя";
+    }
+
+    return null;
 }
 
 /**
@@ -236,13 +248,17 @@ function validatePassword(string $password): ?string
 {
     if (strpos($password, " ") !== false) {
         return "Пароль не должен содержать пробельные символы";
-    } elseif (mb_strlen($password) < 8) {
-        return "Пароль должен содержать минимум 8 символов";
-    } elseif (mb_strlen($password) > 60) {
-        return "Пароль не должен превышать лимит 60-ти символов";
-    } else {
-        return null;
     }
+
+    if (mb_strlen($password) < 8) {
+        return "Пароль должен содержать минимум 8 символов";
+    }
+
+    if (mb_strlen($password) > 60) {
+        return "Пароль не должен превышать лимит 60-ти символов";
+    }
+
+    return null;
 }
 
 /**
