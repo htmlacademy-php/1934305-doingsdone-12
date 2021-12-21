@@ -39,8 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $mysqliError = mysqli_error($con);
             renderError($mysqliError);
             unlink($taskForm["file"]);
-            exit();
         }
+        exit();
     }
 }
 

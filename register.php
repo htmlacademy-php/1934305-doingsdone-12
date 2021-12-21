@@ -20,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             $mysqliError = mysqli_error($con);
             renderError($mysqliError);
-            exit();
         }
+        exit();
     }
 }
 
