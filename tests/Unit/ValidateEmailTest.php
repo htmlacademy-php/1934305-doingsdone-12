@@ -12,13 +12,13 @@ class ValidateEmailTest extends TestCase
     {
 
         $superLongWord = Text::lexify(str_repeat("?", 257));
-        $this->assertEquals("E-mail адрес слишком длинный", validateEmail($superLongWord, ["1@mail.ru"]));
-        $this->assertEquals(null, validateEmail("hello@mail.ru", ["1@mail.ru"]));
-        $this->assertEquals(null, validateEmail("    hello@mail.ru    ", ["1@mail.ru"]));
-        $this->assertEquals("E-mail введён некорректно", validateEmail("fewfewfef", ["1@mail.ru"]));
-        $this->assertEquals("E-mail введён некорректно", validateEmail("   ", ["1@mail.ru"]));
-        $this->assertEquals("Данный E-mail адрес уже занят", validateEmail("d_ivanov@mail.ru", ["d_ivanov@mail.ru", "a_beliy@mail.ru"]));
-        $this->assertEquals("Данный E-mail адрес уже занят", validateEmail("a_beliy@mail.ru", ["d_ivanov@mail.ru", "a_beliy@mail.ru"]));
+        $this->assertEquals("E-mail адрес слишком длинный", validateEmail($superLongWord, false));
+        $this->assertEquals(null, validateEmail("hello@mail.ru", false));
+        $this->assertEquals(null, validateEmail("    hello@mail.ru    ", false));
+        $this->assertEquals("E-mail введён некорректно", validateEmail("fewfewfef", false));
+        $this->assertEquals("E-mail введён некорректно", validateEmail("   ", false));
+        $this->assertEquals("Данный E-mail адрес уже занят", validateEmail("d_ivanov@mail.ru", true));
+        $this->assertEquals("Данный E-mail адрес уже занят", validateEmail("a_beliy@mail.ru", true));
     }
 }
 
