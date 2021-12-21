@@ -13,6 +13,7 @@ $projectsId = array_column($projects, "id");
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $taskForm = ["name" => null, "project_id" => null, "end_time" => null, "user_id" => null, "file" => null];
     $taskForm = filter_input_array(INPUT_POST);
     $taskForm["user_id"] = $userId;
     $taskForm["file"] = "";
