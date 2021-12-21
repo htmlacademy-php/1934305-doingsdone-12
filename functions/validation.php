@@ -191,10 +191,10 @@ function validateFileUpload(): ?string
 /**
  * Проверяет на корректность введёный email адрес из формы
  * @param string $email -- введённый email адрес пользователем
- * @param array $emails -- массив всех уже записанных email адресов из БД
+ * @param bool $isEmailInDB -- результат проверки на занятность email адреса
  * @return string|null сообщение об ошибке или null
  */
-function validateEmail(string $email, array $emails): ?string
+function validateEmail(string $email, bool $isEmailInDB): ?string
 {
     $email = trim($email);
 
@@ -202,7 +202,7 @@ function validateEmail(string $email, array $emails): ?string
         return "E-mail адрес слишком длинный";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "E-mail введён некорректно";
-    } elseif (in_array($email, $emails)) {
+    } elseif ($isEmailInDB === true) {
         return "Данный E-mail адрес уже занят";
     } else {
         return null;
@@ -248,13 +248,14 @@ function validatePassword(string $password): ?string
 /**
  * Проверяет данные введённые из формы на ошибки
  * @param array $registerForm массив данных введённых из формы
- * @param array $emails -- почтовые адресы из полученные из БД
+ * @param mysqli $con - объект подключения к БД
  * @return array массив ошибок
  */
-function validateRegisterForm(array $registerForm, array $emails): array
+function validateRegisterForm(array $registerForm, mysqli $con): array
 {
+    $isEmailInDB = isEmailExistsInDB($con, $registerForm["email"]);
     $errors = [];
-    $errors["email"] = validateEmail($registerForm["email"], $emails);
+    $errors["email"] = validateEmail($registerForm["email"], $isEmailInDB);
     $errors["password"] = validatePassword($registerForm["password"]);
     $errors["name"] = validateUserName($registerForm["name"]);
 

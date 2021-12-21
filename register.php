@@ -9,8 +9,7 @@ $title = "Дела в порядке";
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $registerForm = filter_input_array(INPUT_POST);
-    $emailsFromDB = getEmailsFromDB($con);
-    $errors = validateRegisterForm($registerForm, $emailsFromDB);
+    $errors = validateRegisterForm($registerForm, $con);
     $errors = array_filter($errors);
 
     if (empty($errors)) {
