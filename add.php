@@ -13,13 +13,11 @@ $projectsId = array_column($projects, "id");
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $taskForm = ["name" => null, "project_id" => null, "end_time" => null, "user_id" => null, "file" => null];
-    $taskForm = filter_input_array(INPUT_POST);
+    $expectedFields = ["name", "project_id", "end_time", "user_id", "file"];
+    $taskForm = makeArrayFromFormInput($expectedFields);
     $taskForm["user_id"] = $userId;
-    $taskForm["file"] = "";
 
     $errors = validateTaskForm($taskForm, $projectsId);
-    $errors = array_filter($errors);
 
     if (!empty($_FILES["file"]["name"]) && empty($errors)) {
         $pathFile = validateFileUpload();

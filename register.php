@@ -8,10 +8,9 @@ $title = "Дела в порядке";
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $registerForm = ["email" => null, "password" => null, "name" => null];
-    $registerForm = filter_input_array(INPUT_POST);
+    $expectedFields= ["email", "password", "name"];
+    $registerForm = makeArrayFromFormInput($expectedFields);
     $errors = validateRegisterForm($registerForm, $con);
-    $errors = array_filter($errors);
 
     if (empty($errors)) {
         $res = createNewUser($con, $registerForm);

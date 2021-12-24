@@ -23,52 +23,6 @@ function isDateValid(string $date): bool
 }
 
 /**
- * Возвращает корректную форму множественного числа
- * Ограничения: только для целых чисел
- *
- * Пример использования:
- * $remaining_minutes = 5;
- * echo "Я поставил таймер на {$remaining_minutes} " .
- *     get_noun_plural_form(
- *         $remaining_minutes,
- *         'минута',
- *         'минуты',
- *         'минут'
- *     );
- * Результат: "Я поставил таймер на 5 минут"
- *
- * @param int $number Число, по которому вычисляем форму множественного числа
- * @param string $one Форма единственного числа: яблоко, час, минута
- * @param string $two Форма множественного числа для 2, 3, 4: яблока, часа, минуты
- * @param string $many Форма множественного числа для остальных чисел
- *
- * @return string Рассчитанная форма множественнго числа
- */
-function getNounPluralForm(int $number, string $one, string $two, string $many): string
-{
-    $number = (int)$number;
-    $mod10 = $number % 10;
-    $mod100 = $number % 100;
-
-    switch (true) {
-        case ($mod100 >= 11 && $mod100 <= 20):
-            return $many;
-
-        case ($mod10 > 5):
-            return $many;
-
-        case ($mod10 === 1):
-            return $one;
-
-        case ($mod10 >= 2 && $mod10 <= 4):
-            return $two;
-
-        default:
-            return $many;
-    }
-}
-
-/**
  * Определяет является ли дата датой, для выполнения которой осталось меньше 24 часов
  * @param string|null $dateStr дата в виде строки так же может быть null
  * @param DateTime $dtNow текущая дата
@@ -173,7 +127,7 @@ function validateTaskForm(array $taskForm, array $projectsId): array
     $errors["name"] = validateTaskName($taskForm["name"]);
     $errors["end_time"] = validateDate($taskForm["end_time"], date_create()->format("Y-m-d"));
 
-    return $errors;
+    return array_filter($errors);
 }
 
 /**
@@ -275,5 +229,23 @@ function validateRegisterForm(array $registerForm, mysqli $con): array
     $errors["password"] = validatePassword($registerForm["password"]);
     $errors["name"] = validateUserName($registerForm["name"]);
 
-    return $errors;
+    return array_filter($errors);
+}
+
+
+/**
+ * Формирует и заполняет массив из данных полученных из форм
+ * @param array $expectedFields ожидаемые поля для нового массива
+ * @return array отфильтрованный массив данных из формы
+ */
+function makeArrayFromFormInput(array $expectedFields): array
+{
+    $filteredPost = filter_input_array(INPUT_POST);
+
+    $res = [];
+    foreach ($expectedFields as $field) {
+        $res[$field] = $filteredPost[$field] ?? null;
+    }
+
+    return $res;
 }
