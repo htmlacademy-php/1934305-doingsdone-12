@@ -8,8 +8,7 @@ $title = "Дела в порядке";
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $expectedFields= ["email", "password", "name"];
-    $registerForm = makeArrayFromFormInput($expectedFields);
+    $registerForm = makeRegisterFormArray();
     $errors = validateRegisterForm($registerForm, $con);
 
     if (empty($errors)) {

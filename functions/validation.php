@@ -249,3 +249,25 @@ function makeArrayFromFormInput(array $expectedFields): array
 
     return $res;
 }
+
+/**
+ * Создаёт массив задачи из введённых данных из формы задач
+ * @return array отфильтрованный массив данных из формы задач
+ */
+function makeTaskFormArray(): array
+{
+    $expectedFields = ["name", "project_id", "end_time", "user_id", "file"];
+
+    return makeArrayFromFormInput($expectedFields);
+}
+
+/**
+ * Создаёт массив задачи из введённых данных из формы регистрации
+ * @return array отфильтрованный массив данных из формы регистрации
+ */
+function makeRegisterFormArray(): array
+{
+    $expectedFields= ["email", "password", "name"];
+
+    return makeArrayFromFormInput($expectedFields);
+}

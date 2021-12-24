@@ -13,8 +13,7 @@ $projectsId = array_column($projects, "id");
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $expectedFields = ["name", "project_id", "end_time", "user_id", "file"];
-    $taskForm = makeArrayFromFormInput($expectedFields);
+    $taskForm = makeTaskFormArray();
     $taskForm["user_id"] = $userId;
 
     $errors = validateTaskForm($taskForm, $projectsId);
