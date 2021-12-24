@@ -23,52 +23,6 @@ function isDateValid(string $date): bool
 }
 
 /**
- * Возвращает корректную форму множественного числа
- * Ограничения: только для целых чисел
- *
- * Пример использования:
- * $remaining_minutes = 5;
- * echo "Я поставил таймер на {$remaining_minutes} " .
- *     get_noun_plural_form(
- *         $remaining_minutes,
- *         'минута',
- *         'минуты',
- *         'минут'
- *     );
- * Результат: "Я поставил таймер на 5 минут"
- *
- * @param int $number Число, по которому вычисляем форму множественного числа
- * @param string $one Форма единственного числа: яблоко, час, минута
- * @param string $two Форма множественного числа для 2, 3, 4: яблока, часа, минуты
- * @param string $many Форма множественного числа для остальных чисел
- *
- * @return string Рассчитанная форма множественнго числа
- */
-function getNounPluralForm(int $number, string $one, string $two, string $many): string
-{
-    $number = (int)$number;
-    $mod10 = $number % 10;
-    $mod100 = $number % 100;
-
-    switch (true) {
-        case ($mod100 >= 11 && $mod100 <= 20):
-            return $many;
-
-        case ($mod10 > 5):
-            return $many;
-
-        case ($mod10 === 1):
-            return $one;
-
-        case ($mod10 >= 2 && $mod10 <= 4):
-            return $two;
-
-        default:
-            return $many;
-    }
-}
-
-/**
  * Определяет является ли дата датой, для выполнения которой осталось меньше 24 часов
  * @param string|null $dateStr дата в виде строки так же может быть null
  * @param DateTime $dtNow текущая дата
@@ -110,11 +64,13 @@ function validateTaskName(string $value): ?string
 
     if ($valueLen == 0) {
         return "Поле название надо заполнить";
-    } elseif ($valueLen > 255) {
-        return "Название не должно превышать размер в 255 символов";
-    } else {
-        return null;
     }
+
+    if ($valueLen > 255) {
+        return "Название не должно превышать размер в 255 символов";
+    }
+
+    return null;
 }
 
 /**
@@ -143,13 +99,17 @@ function validateDate(string $dateStr, string $curDate): ?string
 {
     if (empty(trim($dateStr))) {
         return null;
-    } elseif (isDateValid($dateStr) == false) {
-        return "Неверный формат даты";
-    } elseif ($curDate > $dateStr) {
-        return "Выбранная дата должна быть больше или равна текущей";
-    } else {
-        return null;
     }
+
+    if (isDateValid($dateStr) == false) {
+        return "Неверный формат даты";
+    }
+
+    if ($curDate > $dateStr) {
+        return "Выбранная дата должна быть больше или равна текущей";
+    }
+
+    return null;
 }
 
 /**
@@ -161,13 +121,13 @@ function validateDate(string $dateStr, string $curDate): ?string
 function validateTaskForm(array $taskForm, array $projectsId): array
 {
     $errors = [];
-    // приравниваю значение $value к инту, чтобы если кто-то попытается отправить форму
-    // с пустым значением или строку она $value просто преобразовался бы в 0
+    // приравниваю значение из $taskForm к инту, чтобы если кто-то попытается отправить форму
+    // с пустым значением или строку это значение просто преобразовалось бы к 0
     $errors["project_id"] = validateProject((int)$taskForm["project_id"], $projectsId);
     $errors["name"] = validateTaskName($taskForm["name"]);
     $errors["end_time"] = validateDate($taskForm["end_time"], date_create()->format("Y-m-d"));
 
-    return $errors;
+    return array_filter($errors);
 }
 
 /**
@@ -186,4 +146,128 @@ function validateFileUpload(): ?string
         }
 
         return "uploads/" . $filename;
+}
+
+/**
+ * Проверяет на корректность введёный email адрес из формы
+ * @param string $email -- введённый email адрес пользователем
+ * @param bool $isEmailInDB -- результат проверки на занятность email адреса
+ * @return string|null сообщение об ошибке или null
+ */
+function validateEmail(string $email, bool $isEmailInDB): ?string
+{
+    $email = trim($email);
+
+    if (mb_strlen($email) > 255) {
+        return "E-mail адрес слишком длинный";
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "E-mail введён некорректно";
+    }
+
+    if ($isEmailInDB === true) {
+        return "Данный E-mail адрес уже занят";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет на корректность введённое имя пользователя из формы
+ * @param string $userName -- введённое имя пользователем
+ * @return string|null сообщение об ошибке или null
+ */
+function validateUserName(string $userName): ?string
+{
+    $userName = trim($userName);
+
+    if (mb_strlen($userName) === 0) {
+        return "Введите имя пользователя";
+    }
+
+    if (mb_strlen($userName) > 70) {
+        return "Слишком длинное имя";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет на корректность введённый пароль из формы
+ * @param string $password -- введённый пароль
+ * @return string|null сообщение об ошибке или null
+ */
+function validatePassword(string $password): ?string
+{
+    if (strpos($password, " ") !== false) {
+        return "Пароль не должен содержать пробельные символы";
+    }
+
+    if (mb_strlen($password) < 8) {
+        return "Пароль должен содержать минимум 8 символов";
+    }
+
+    if (mb_strlen($password) > 60) {
+        return "Пароль не должен превышать лимит 60-ти символов";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет данные введённые из формы на ошибки
+ * @param array $registerForm массив данных введённых из формы
+ * @param mysqli $con - объект подключения к БД
+ * @return array массив ошибок
+ */
+function validateRegisterForm(array $registerForm, mysqli $con): array
+{
+    $isEmailInDB = isEmailExistsInDB($con, $registerForm["email"]);
+    $errors = [];
+    $errors["email"] = validateEmail($registerForm["email"], $isEmailInDB);
+    $errors["password"] = validatePassword($registerForm["password"]);
+    $errors["name"] = validateUserName($registerForm["name"]);
+
+    return array_filter($errors);
+}
+
+
+/**
+ * Формирует и заполняет массив из данных полученных из форм
+ * @param array $expectedFields ожидаемые поля для нового массива
+ * @return array отфильтрованный массив данных из формы
+ */
+function makeArrayFromFormInput(array $expectedFields): array
+{
+    $filteredPost = filter_input_array(INPUT_POST);
+
+    $res = [];
+    foreach ($expectedFields as $field) {
+        $res[$field] = $filteredPost[$field] ?? null;
+    }
+
+    return $res;
+}
+
+/**
+ * Создаёт массив задачи из введённых данных из формы задач
+ * @return array отфильтрованный массив данных из формы задач
+ */
+function makeTaskFormArray(): array
+{
+    $expectedFields = ["name", "project_id", "end_time", "user_id", "file"];
+
+    return makeArrayFromFormInput($expectedFields);
+}
+
+/**
+ * Создаёт массив задачи из введённых данных из формы регистрации
+ * @return array отфильтрованный массив данных из формы регистрации
+ */
+function makeRegisterFormArray(): array
+{
+    $expectedFields= ["email", "password", "name"];
+
+    return makeArrayFromFormInput($expectedFields);
 }

@@ -189,3 +189,52 @@ function createNewTask(mysqli $con, array $taskForm): bool
 
     return mysqli_stmt_execute($stmt);
 }
+
+
+/**
+ * Проверяет существует ли почтовая запись в БД
+ * @param mysqli $con - объект подключения к БД
+ * @param string $email - почтовый адрес введённый из формы
+ * @return bool -- возвращает true, если существует. Возвращает false в ином случае
+ */
+function isEmailExistsInDB(mysqli $con, string $email): bool
+{
+    $sqlQuery = "SELECT id FROM users WHERE email = ?";
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, ["email" => $email]);
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result) {
+        $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    if (empty($user)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Создаёт нового пользователя в БД
+ * @param mysqli $con - объект подключения к БД
+ * @param array $registerForm - данные пользователя для регистрации из формы
+ * @return bool - результат выполнения запроса к БД
+ */
+function createNewUser(mysqli $con, array $registerForm): bool
+{
+    $password = password_hash($registerForm["password"], PASSWORD_DEFAULT);
+
+    $sqlQuery = "INSERT INTO users (registration_time, email, password, name)
+                    VALUES (NOW(), ?, ?, ?)";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, [$registerForm["email"], $password, $registerForm["name"]]);
+
+    return mysqli_stmt_execute($stmt);
+}
