@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . "/vendor/autoload.php";
 $config = require_once "config.php";
 
@@ -9,3 +10,4 @@ require_once "functions/templates.php";
 require_once "functions/misc.php";
 
 $con = makeConnection($config["db"]);
+$title = "Дела в порядке";

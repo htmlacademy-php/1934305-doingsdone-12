@@ -1,10 +1,14 @@
 <?php
 /* @var mysqli $con
+ * @var string $title
 */
 
 require_once "init.php";
 
-$title = "Дела в порядке";
+if (empty($_SESSION)) {
+    header("Location: index.php");
+    exit();
+}
 
 $userId = 1;
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
@@ -57,7 +61,8 @@ $pageContent = includeTemplate("form-task.php", [
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
     "title" => $title,
-    "addScript" => pathinfo("add.php", PATHINFO_BASENAME)
+    "addScript" => pathinfo("add.php", PATHINFO_BASENAME),
+    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);

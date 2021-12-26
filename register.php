@@ -1,10 +1,9 @@
 <?php
 /* @var mysqli $con
+ * @var string $title
 */
 
 require_once "init.php";
-
-$title = "Дела в порядке";
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -24,12 +23,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-$pageContent = includeTemplate("register-form.php", ["errors" => $errors]);
+$pageContent = includeTemplate("register-form.php", [
+    "errors" => $errors,
+    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
+]);
 
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
     "title" => $title,
-    "addScript" => pathinfo("add.php", PATHINFO_BASENAME)
+    "addScript" => pathinfo("add.php", PATHINFO_BASENAME),
+    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);

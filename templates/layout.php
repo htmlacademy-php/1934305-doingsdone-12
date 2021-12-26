@@ -2,7 +2,9 @@
 /* @var string $title
  * @var string $content
  * @var string $addScript
-*/
+ * @var string $authScript
+ */
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -16,7 +18,7 @@
 </head>
 
 <body>
-<h1 class="visually-hidden">Дела в порядке</h1>
+<h1 class="visually-hidden"> <?= $title ?> </h1>
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
@@ -26,16 +28,25 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="<?= makeURL($addScript, []) ?>">Добавить
-                    задачу</a>
+                <?php
+                if (!empty($_SESSION)): ?>
+                    <a class="main-header__side-item button button--plus open-modal"
+                       href="<?= makeURL($addScript, []) ?>">Добавить
+                        задачу</a>
 
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__data">
-                        <p>Константин</p>
+                    <div class="main-header__side-item user-menu">
+                        <div class="user-menu__data">
+                            <p>Константин</p>
 
-                        <a href="#">Выйти</a>
+                            <a href="#">Выйти</a>
+                        </div>
                     </div>
-                </div>
+                <?php
+                else : ?>
+                    <a class="main-header__side-item button button--transparent"
+                       href="<?= makeURL($authScript, []) ?>">Войти</a>
+                <?php
+                endif ?>
             </div>
         </header>
         <?= $content ?>
@@ -49,9 +60,11 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
-        <a class="main-footer__button button button--plus" href="<?= makeURL($addScript, []) ?>">Добавить задачу</a>
-
+        <?php
+        if (!empty($_SESSION)): ?>
+            <a class="main-footer__button button button--plus" href="<?= makeURL($addScript, []) ?>">Добавить задачу</a>
+        <?php
+        endif; ?>
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
             <a class="social__link social__link--facebook" href="#">

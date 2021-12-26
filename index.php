@@ -1,11 +1,27 @@
 <?php
 /* @var mysqli $con
+ * @var string $title
  */
 
 require_once "init.php";
 
+if (empty($_SESSION)) {
+
+    $pageContent = includeTemplate("guest.php", [
+        "registerScript" => pathinfo("register.php", PATHINFO_BASENAME)
+    ]);
+
+    $layoutContent = includeTemplate("layout.php", [
+        "content" => $pageContent,
+        "title" => $title,
+        "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
+    ]);
+
+    print($layoutContent);
+    exit();
+}
+
 $showCompleteTasks = 1;
-$title = "Дела в порядке";
 
 $userId = 1; // Сейчас пока 1, потом заменю на $_GET
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
