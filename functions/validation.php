@@ -151,10 +151,9 @@ function validateFileUpload(): ?string
 /**
  * Проверяет на корректность введёный email адрес из формы
  * @param string $email -- введённый email адрес пользователем
- * @param bool $isEmailInDB -- результат проверки на занятность email адреса
  * @return string|null сообщение об ошибке или null
  */
-function validateEmail(string $email, bool $isEmailInDB): ?string
+function validateEmail(string $email): ?string
 {
     $email = trim($email);
 
@@ -166,11 +165,37 @@ function validateEmail(string $email, bool $isEmailInDB): ?string
         return "E-mail введён некорректно";
     }
 
+    return null;
+}
+
+/**
+ * Проверяет на корректность введёный email адрес из формы специфичной только для регистрации
+ * @param string $email -- введённый email адрес пользователем
+ * @param bool $isEmailInDB -- результат проверки на занятность email адреса
+ * @return string|null сообщение об ошибке или null
+ */
+function validateEmailReg(string $email, bool $isEmailInDB): ?string
+{
     if ($isEmailInDB === true) {
         return "Данный E-mail адрес уже занят";
     }
 
-    return null;
+    return validateEmail($email);
+}
+
+/**
+ * Проверяет на корректность введёный email адрес из формы специфичной только для аутентификации
+ * @param string $email -- введённый email адрес пользователем
+ * @param bool $isEmailInDB -- результат проверки на занятность email адреса
+ * @return string|null сообщение об ошибке или null
+ */
+function validateEmailAuth(string $email, bool $isEmailInDB): ?string
+{
+    if ($isEmailInDB === false) {
+        return "Пользователя с данным E-mail адресом не существует";
+    }
+
+    return validateEmail($email, $isEmailInDB);
 }
 
 /**
@@ -225,7 +250,7 @@ function validateRegisterForm(array $registerForm, mysqli $con): array
 {
     $isEmailInDB = isEmailExistsInDB($con, $registerForm["email"]);
     $errors = [];
-    $errors["email"] = validateEmail($registerForm["email"], $isEmailInDB);
+    $errors["email"] = validateEmailReg($registerForm["email"], $isEmailInDB);
     $errors["password"] = validatePassword($registerForm["password"]);
     $errors["name"] = validateUserName($registerForm["name"]);
 
@@ -267,7 +292,34 @@ function makeTaskFormArray(): array
  */
 function makeRegisterFormArray(): array
 {
-    $expectedFields= ["email", "password", "name"];
+    $expectedFields = ["email", "password", "name"];
 
     return makeArrayFromFormInput($expectedFields);
+}
+
+/**
+ * Создаёт массив из учётных данных пользователя
+ * @return array отфильтрованный массив данных из формы аутентификации
+ */
+function makeAuthFormArray(): array
+{
+    $expectedField = ["email", "password"];
+
+    return makeArrayFromFormInput($expectedField);
+}
+
+/**
+ * Проверяет данные входа введённые из формы на ошибки
+ * @param array $authForm массив данных введённых из формы
+ * @param mysqli $con - объект подключения к БД
+ * @return array массив ошибок
+ */
+function validateAuthForm(array $authForm, mysqli $con): array
+{
+    $isEmailInDb = isEmailExistsInDB($con, $authForm["email"]);
+    $errors = [];
+    $errors["email"] = validateEmailAuth($authForm["email"], $isEmailInDb);
+    $errors["password"] = validatePassword($authForm["password"]);
+
+    return array_filter($errors);
 }
