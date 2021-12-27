@@ -11,9 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($errors)) {
         $user = getUserCredentials($con, $authForm["email"]);
-
         if ($user !== null) {
-            $errors["password"] = validateUserCredentials($authForm["password"], $user);
+            $errors["password"] = createUserSession($authForm["password"], $user);
         } else {
             $errors["email"] = "Такой пользователь не найден";
         }
