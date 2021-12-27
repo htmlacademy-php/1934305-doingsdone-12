@@ -192,14 +192,14 @@ function createNewTask(mysqli $con, array $taskForm): bool
 
 
 /**
- * Проверяет существует ли почтовая запись в БД
+ * Обобщённая функция для получения информации о юзере из БД
  * @param mysqli $con - объект подключения к БД
  * @param string $email - почтовый адрес введённый из формы
- * @return bool -- возвращает true, если существует. Возвращает false в ином случае
+ * @param string $sqlQuery - SQL запрос
+ * @return array - возвращает ассоциативный массив
  */
-function isEmailExistsInDB(mysqli $con, string $email): bool
+function getUser(mysqli $con, string $email, string $sqlQuery): array
 {
-    $sqlQuery = "SELECT id FROM users WHERE email = ?";
     $stmt = dbGetPrepareStmt($con, $sqlQuery, ["email" => $email]);
 
     mysqli_stmt_execute($stmt);
@@ -214,6 +214,20 @@ function isEmailExistsInDB(mysqli $con, string $email): bool
         exit();
     }
 
+    return $user;
+}
+
+/**
+ * Проверяет существует ли почтовая запись в БД
+ * @param mysqli $con - объект подключения к БД
+ * @param string $email - почтовый адрес введённый из формы
+ * @return bool -- возвращает true, если существует. Возвращает false в ином случае
+ */
+function isEmailExistsInDB(mysqli $con, string $email): bool
+{
+    $sqlQuery = "SELECT id FROM users WHERE email = ?";
+
+    $user = getUser($con, $email, $sqlQuery);
     if (empty($user)) {
         return false;
     }
@@ -237,4 +251,23 @@ function createNewUser(mysqli $con, array $registerForm): bool
     $stmt = dbGetPrepareStmt($con, $sqlQuery, [$registerForm["email"], $password, $registerForm["name"]]);
 
     return mysqli_stmt_execute($stmt);
+}
+
+/**
+ * Получает данные для входа пользователя из БД
+ * @param mysqli $con - объект подключения к БД
+ * @param string $email - почтовый адрес введённый из формы
+ * @return array - возвращает ассоциативный массив с данными о пользователе или null
+ */
+function getUserCredentials(mysqli $con, string $email): ?array
+{
+    $sqlQuery = "SELECT * FROM users WHERE email = ?";
+
+    $user = getUser($con, $email, $sqlQuery);
+
+    if (empty($user)) {
+        return null;
+    }
+
+    return $user;
 }
