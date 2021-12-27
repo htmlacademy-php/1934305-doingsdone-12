@@ -1,6 +1,7 @@
 <?php
 /* @var mysqli $con
  * @var string $title
+ * @var int $userId
 */
 
 require_once "init.php";
@@ -10,7 +11,7 @@ if (empty($_SESSION)) {
     exit();
 }
 
-$userId = 1;
+$userId = $_SESSION["user"]["id"];
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 $projects = getProjects($con, $userId);
 $projectsId = array_column($projects, "id");
