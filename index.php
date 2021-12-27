@@ -23,7 +23,7 @@ if (empty($_SESSION)) {
 
 $showCompleteTasks = 1;
 
-$userId = 1; // Сейчас пока 1, потом заменю на $_GET
+$userId = $_SESSION["user"]["id"];
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 
 $projects = [];

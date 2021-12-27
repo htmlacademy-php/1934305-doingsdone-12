@@ -23,6 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+if (isset($_SESSION["user"])) {
+    header("Location: /index.php");
+    exit();
+}
+
 $pageContent = includeTemplate("register-form.php", [
     "errors" => $errors,
     "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
