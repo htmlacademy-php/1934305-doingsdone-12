@@ -323,3 +323,14 @@ function validateAuthForm(array $authForm, mysqli $con): array
 
     return array_filter($errors);
 }
+
+function validateUserCredentials(string $formPassword, array $user): ?string
+{
+    if (password_verify($formPassword, $user["password"])) {
+        $_SESSION["user"] = $user;
+
+        return null;
+    }
+
+    return "Неверный пароль";
+}
