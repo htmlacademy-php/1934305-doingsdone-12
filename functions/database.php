@@ -269,5 +269,5 @@ function getUserCredentials(mysqli $con, string $email): ?array
         return null;
     }
 
-    return $user;
+    return $user[0];
 }

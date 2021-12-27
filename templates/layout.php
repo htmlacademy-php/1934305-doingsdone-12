@@ -3,6 +3,7 @@
  * @var string $content
  * @var string $addScript
  * @var string $authScript
+ * @var string $logoutScript
  */
 
 ?>
@@ -36,9 +37,9 @@
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
-                            <p>Константин</p>
+                            <p><?= $_SESSION["user"]["name"]?></p>
 
-                            <a href="#">Выйти</a>
+                            <a href="<?= makeURL($logoutScript, []) ?>">Выйти</a>
                         </div>
                     </div>
                 <?php

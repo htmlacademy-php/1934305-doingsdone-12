@@ -62,7 +62,8 @@ $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
     "title" => $title,
     "addScript" => pathinfo("add.php", PATHINFO_BASENAME),
-    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
+    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME),
+    "logoutScript" => pathinfo("logout.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);
