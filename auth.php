@@ -1,9 +1,35 @@
 <?php
 /* @var string $title
+ * @var mysqli $con
 */
 require_once "init.php";
 
 $errors = [];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $authForm = makeAuthFormArray();
+    $errors = validateAuthForm($authForm, $con);
+
+    if (empty($errors)) {
+        $user = getUserCredentials($con, $authForm["email"]);
+
+        if ($user !== null) {
+            $errors["password"] = validateUserCredentials($authForm["password"], $user);
+        } else {
+            $errors["email"] = "Такой пользователь не найден";
+        }
+    }
+
+    if (empty($errors)) {
+        header("Location: /index.php");
+        exit();
+    }
+}
+
+if (isset($_SESSION["user"])) {
+    header("Location: /index.php");
+    exit();
+}
+
 
 $pageContent = includeTemplate("form-authorization.php", [
     "authScript" => pathinfo("auth.php", PATHINFO_BASENAME),
