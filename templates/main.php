@@ -3,7 +3,6 @@
  * @var int $showCompleteTasks
  * @var array $tasks
  */
-
 ?>
 
 <div class="content">

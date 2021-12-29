@@ -20,5 +20,8 @@
   "require": {
     "ext-mysqli": "*",
     "ext-mbstring": "*"
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit tests --colors --bootstrap=init-test.php"
   }
 }

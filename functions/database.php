@@ -190,7 +190,6 @@ function createNewTask(mysqli $con, array $taskForm): bool
     return mysqli_stmt_execute($stmt);
 }
 
-
 /**
  * Проверяет существует ли почтовая запись в БД
  * @param mysqli $con - объект подключения к БД
@@ -200,6 +199,7 @@ function createNewTask(mysqli $con, array $taskForm): bool
 function isEmailExistsInDB(mysqli $con, string $email): bool
 {
     $sqlQuery = "SELECT id FROM users WHERE email = ?";
+
     $stmt = dbGetPrepareStmt($con, $sqlQuery, ["email" => $email]);
 
     mysqli_stmt_execute($stmt);
@@ -237,4 +237,35 @@ function createNewUser(mysqli $con, array $registerForm): bool
     $stmt = dbGetPrepareStmt($con, $sqlQuery, [$registerForm["email"], $password, $registerForm["name"]]);
 
     return mysqli_stmt_execute($stmt);
+}
+
+/**
+ * Получает данные для входа пользователя из БД
+ * @param mysqli $con - объект подключения к БД
+ * @param string $email - почтовый адрес введённый из формы
+ * @return array - возвращает ассоциативный массив с данными о пользователе или null
+ */
+function getUserCredentials(mysqli $con, string $email): ?array
+{
+    $sqlQuery = "SELECT * FROM users WHERE email = ?";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, ["email" => $email]);
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result) {
+        $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    if (empty($user)) {
+        return null;
+    }
+
+    return $user[0];
 }
