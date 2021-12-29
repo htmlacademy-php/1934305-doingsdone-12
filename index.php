@@ -1,20 +1,18 @@
 <?php
 /* @var mysqli $con
  * @var string $title
+ * @var int $userId
  */
 
 require_once "init.php";
 
-if (empty($_SESSION)) {
+if (!isset($_SESSION["user"])) {
 
-    $pageContent = includeTemplate("guest.php", [
-        "registerScript" => pathinfo("register.php", PATHINFO_BASENAME)
-    ]);
+    $pageContent = includeTemplate("guest.php");
 
     $layoutContent = includeTemplate("layout.php", [
         "content" => $pageContent,
         "title" => $title,
-        "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
     ]);
 
     print($layoutContent);
@@ -23,7 +21,6 @@ if (empty($_SESSION)) {
 
 $showCompleteTasks = 1;
 
-$userId = $_SESSION["user"]["id"];
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 
 $projects = [];
@@ -58,8 +55,6 @@ $pageContent = includeTemplate("main.php", [
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
     "title" => $title,
-    "addScript" => pathinfo("add.php", PATHINFO_BASENAME),
-    "logoutScript" => pathinfo("logout.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);

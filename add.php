@@ -6,12 +6,11 @@
 
 require_once "init.php";
 
-if (empty($_SESSION)) {
+if (!isset($_SESSION["user"])) {
     header("Location: index.php");
     exit();
 }
 
-$userId = $_SESSION["user"]["id"];
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 $projects = getProjects($con, $userId);
 $projectsId = array_column($projects, "id");
@@ -62,9 +61,6 @@ $pageContent = includeTemplate("form-task.php", [
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
     "title" => $title,
-    "addScript" => pathinfo("add.php", PATHINFO_BASENAME),
-    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME),
-    "logoutScript" => pathinfo("logout.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);

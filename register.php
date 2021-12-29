@@ -30,14 +30,11 @@ if (isset($_SESSION["user"])) {
 
 $pageContent = includeTemplate("register-form.php", [
     "errors" => $errors,
-    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
 ]);
 
 $layoutContent = includeTemplate("layout.php", [
     "content" => $pageContent,
     "title" => $title,
-    "addScript" => pathinfo("add.php", PATHINFO_BASENAME),
-    "authScript" => pathinfo("auth.php", PATHINFO_BASENAME)
 ]);
 
 print($layoutContent);

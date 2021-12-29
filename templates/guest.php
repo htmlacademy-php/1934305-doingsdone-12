@@ -1,8 +1,3 @@
-<?php
-/* @var string $registerScript
- */
-
-?>
 <div class="content">
     <section class="welcome">
         <h2 class="welcome__heading">«Дела в порядке»</h2>
@@ -15,6 +10,6 @@
                 сроки.</p>
         </div>
 
-        <a class="welcome__button button" href="<?= makeURL($registerScript, []) ?>">Зарегистрироваться</a>
+        <a class="welcome__button button" href="<?= makeURL(REGISTER_SCRIPT, []) ?>">Зарегистрироваться</a>
     </section>
 </div>

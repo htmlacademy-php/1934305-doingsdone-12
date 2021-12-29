@@ -16,7 +16,7 @@ class ValidateRegisterFormTest extends TestCase
 
         $expected = ["email" => "E-mail адрес слишком длинный", "password" => "Пароль не должен превышать лимит 60-ти символов", "name" => "Слишком длинное имя"];
         $testRegisterForm = ["email" => $superLongEmail, "password" => $superLongPassword, "name" => $superLongName];
-        $this->assertEquals($expected, validateRegisterForm($testRegisterForm, $con));
+        $this->assertEquals($expected, validateRegisterForm($testRegisterForm, \Database::$con));
 
         $emptyUserName = "    ";
         $emptyPassword = "   ";

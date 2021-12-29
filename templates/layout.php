@@ -1,9 +1,6 @@
 <?php
 /* @var string $title
  * @var string $content
- * @var string $addScript
- * @var string $authScript
- * @var string $logoutScript
  */
 
 ?>
@@ -32,20 +29,20 @@
                 <?php
                 if (!empty($_SESSION)): ?>
                     <a class="main-header__side-item button button--plus open-modal"
-                       href="<?= makeURL($addScript, []) ?>">Добавить
+                       href="<?= makeURL(ADD_SCRIPT, []) ?>">Добавить
                         задачу</a>
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
                             <p><?= $_SESSION["user"]["name"]?></p>
 
-                            <a href="<?= makeURL($logoutScript, []) ?>">Выйти</a>
+                            <a href="<?= makeURL(LOGOUT_SCRIPT, []) ?>">Выйти</a>
                         </div>
                     </div>
                 <?php
                 else : ?>
                     <a class="main-header__side-item button button--transparent"
-                       href="<?= makeURL($authScript, []) ?>">Войти</a>
+                       href="<?= makeURL(AUTH_SCRIPT, []) ?>">Войти</a>
                 <?php
                 endif ?>
             </div>
@@ -63,7 +60,7 @@
         </div>
         <?php
         if (!empty($_SESSION)): ?>
-            <a class="main-footer__button button button--plus" href="<?= makeURL($addScript, []) ?>">Добавить задачу</a>
+            <a class="main-footer__button button button--plus" href="<?= makeURL(ADD_SCRIPT, []) ?>">Добавить задачу</a>
         <?php
         endif; ?>
         <div class="main-footer__social social">

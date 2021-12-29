@@ -190,16 +190,16 @@ function createNewTask(mysqli $con, array $taskForm): bool
     return mysqli_stmt_execute($stmt);
 }
 
-
 /**
- * Обобщённая функция для получения информации о юзере из БД
+ * Проверяет существует ли почтовая запись в БД
  * @param mysqli $con - объект подключения к БД
  * @param string $email - почтовый адрес введённый из формы
- * @param string $sqlQuery - SQL запрос
- * @return array - возвращает ассоциативный массив
+ * @return bool -- возвращает true, если существует. Возвращает false в ином случае
  */
-function getUser(mysqli $con, string $email, string $sqlQuery): array
+function isEmailExistsInDB(mysqli $con, string $email): bool
 {
+    $sqlQuery = "SELECT id FROM users WHERE email = ?";
+
     $stmt = dbGetPrepareStmt($con, $sqlQuery, ["email" => $email]);
 
     mysqli_stmt_execute($stmt);
@@ -214,20 +214,6 @@ function getUser(mysqli $con, string $email, string $sqlQuery): array
         exit();
     }
 
-    return $user;
-}
-
-/**
- * Проверяет существует ли почтовая запись в БД
- * @param mysqli $con - объект подключения к БД
- * @param string $email - почтовый адрес введённый из формы
- * @return bool -- возвращает true, если существует. Возвращает false в ином случае
- */
-function isEmailExistsInDB(mysqli $con, string $email): bool
-{
-    $sqlQuery = "SELECT id FROM users WHERE email = ?";
-
-    $user = getUser($con, $email, $sqlQuery);
     if (empty($user)) {
         return false;
     }
@@ -263,7 +249,19 @@ function getUserCredentials(mysqli $con, string $email): ?array
 {
     $sqlQuery = "SELECT * FROM users WHERE email = ?";
 
-    $user = getUser($con, $email, $sqlQuery);
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, ["email" => $email]);
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result) {
+        $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
 
     if (empty($user)) {
         return null;
