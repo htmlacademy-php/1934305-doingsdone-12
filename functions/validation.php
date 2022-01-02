@@ -149,11 +149,12 @@ function validateFileUpload(): ?string
 }
 
 /**
- * Проверяет на корректность введёный email адрес из формы
+ * Проверяет на корректность введёный email адрес из формы специфичной только для регистрации
  * @param string $email -- введённый email адрес пользователем
+ * @param bool $isEmailInDB -- результат проверки на занятность email адреса
  * @return string|null сообщение об ошибке или null
  */
-function validateEmail(string $email): ?string
+function validateEmailReg(string $email, bool $isEmailInDB): ?string
 {
     $email = trim($email);
 
@@ -165,22 +166,11 @@ function validateEmail(string $email): ?string
         return "E-mail введён некорректно";
     }
 
-    return null;
-}
-
-/**
- * Проверяет на корректность введёный email адрес из формы специфичной только для регистрации
- * @param string $email -- введённый email адрес пользователем
- * @param bool $isEmailInDB -- результат проверки на занятность email адреса
- * @return string|null сообщение об ошибке или null
- */
-function validateEmailReg(string $email, bool $isEmailInDB): ?string
-{
     if ($isEmailInDB === true) {
         return "Данный E-mail адрес уже занят";
     }
 
-    return validateEmail($email);
+    return null;
 }
 
 /**
@@ -191,11 +181,21 @@ function validateEmailReg(string $email, bool $isEmailInDB): ?string
  */
 function validateEmailAuth(string $email, bool $isEmailInDB): ?string
 {
+    $email = trim($email);
+
+    if (mb_strlen($email) > 255) {
+        return "E-mail адрес слишком длинный";
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "E-mail введён некорректно";
+    }
+
     if ($isEmailInDB === false) {
         return "Пользователя с данным E-mail адресом не существует";
     }
 
-    return validateEmail($email, $isEmailInDB);
+    return null;
 }
 
 /**
