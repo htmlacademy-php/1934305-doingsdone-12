@@ -1,6 +1,6 @@
-/*CREATE DATABASE IF NOT EXISTS doingsdone_no_spooks_allowed;
-*/
-/*USE doingsdone_no_spooks_allowed;*/
+CREATE DATABASE IF NOT EXISTS doingsdone_no_spooks_allowed;
+
+USE doingsdone_no_spooks_allowed;
 
 CREATE TABLE IF NOT EXISTS users
 (
