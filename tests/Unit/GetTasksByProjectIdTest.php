@@ -42,7 +42,7 @@ class GetTasksByProjectIdTest extends TestCase
 
     }
 
-    public function testGetTasksAll()
+    public function testGetTasksByProjectId()
     {
         $this->assertEquals([], getTasksByProjectId(Database::$con, 666, 2));
 
