@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users
   name              VARCHAR(70)  NOT NULL,
   email             VARCHAR(255) NOT NULL,
   password          VARCHAR(60)  NOT NULL,
-  registration_time DATETIME     NOT NULL
+  registration_time DATETIME     NOT NULL,
+  UNIQUE KEY unique_email (email)
 );
 
 CREATE TABLE IF NOT EXISTS projects
