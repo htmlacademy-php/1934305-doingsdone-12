@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $taskForm = makeTaskFormArray();
     $taskForm["user_id"] = $userId;
 
-    $errors = validateTaskForm($taskForm, $projectsId);
+    $errors = validateTaskForm($taskForm, $projectsId, date_create()->format("Y-m-d"));
 
     if (!empty($_FILES["file"]["name"]) && empty($errors)) {
         $pathFile = validateFileUpload();

@@ -116,16 +116,17 @@ function validateDate(string $dateStr, string $curDate): ?string
  * Проверяет данные введённые из формы на ошибки
  * @param array $taskForm массив данных введённых из формы
  * @param array $projectsId массив id проектов для валидации
+ * @param string $curDate текущая дата
  * @return array массив ошибок
  */
-function validateTaskForm(array $taskForm, array $projectsId): array
+function validateTaskForm(array $taskForm, array $projectsId, string $curDate): array
 {
     $errors = [];
     // приравниваю значение из $taskForm к инту, чтобы если кто-то попытается отправить форму
     // с пустым значением или строку это значение просто преобразовалось бы к 0
     $errors["project_id"] = validateProject((int)$taskForm["project_id"], $projectsId);
     $errors["name"] = validateTaskName($taskForm["name"]);
-    $errors["end_time"] = validateDate($taskForm["end_time"], date_create()->format("Y-m-d"));
+    $errors["end_time"] = validateDate($taskForm["end_time"], $curDate);
 
     return array_filter($errors);
 }
