@@ -282,7 +282,7 @@ function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
         "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
-    WHERE t.user_id = ? AND MATCH(t.name) AGAINST(?)";
+    WHERE t.user_id = ? AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
 
 
     $result = getUserStmtResult($selectTasksByQuery, ["user_id" => $userId, "query" => $query], $con);
