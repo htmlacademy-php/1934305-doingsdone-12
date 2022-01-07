@@ -32,5 +32,6 @@ CREATE TABLE IF NOT EXISTS tasks
   project_id    INT UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (project_id) REFERENCES projects (id),
-  INDEX status (status)
+  INDEX status (status),
+  FULLTEXT INDEX name(name)
 );
