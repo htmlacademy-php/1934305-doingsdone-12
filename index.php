@@ -29,6 +29,9 @@ $projects = getProjects($con, $userId);
 
 if ($projectId) {
     $tasks = getTasksByProjectId($con, $userId, $projectId);
+} elseif (isset($_GET["query"])) {
+    $query = filter_input(INPUT_GET, "query", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $tasks = getTasksByQuery($con, $userId, $query);
 } else {
     $tasks = getTasksAll($con, $userId);
 }

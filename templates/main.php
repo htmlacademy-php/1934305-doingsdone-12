@@ -3,6 +3,7 @@
  * @var int $showCompleteTasks
  * @var array $tasks
  */
+
 ?>
 
 <div class="content">
@@ -32,45 +33,52 @@
         </div>
         <table class="tasks">
             <?php
-            foreach ($tasks as $task) : ?>
+            if ($tasks === null) : ?>
+                <p>Ничего не найдено по вашему запросу</p>
+            <?php
+            else : ?>
                 <?php
-                if ($showCompleteTasks === 0 && $task["is_finished"]) {
-                    continue;
-                }
-                ?>
-                <tr class="tasks__item task
+                foreach ($tasks as $task) : ?>
+                    <?php
+                    if ($showCompleteTasks === 0 && $task["is_finished"]) {
+                        continue;
+                    }
+                    ?>
+                    <tr class="tasks__item task
                 <?php
-                if (isTaskImportant($task["date"], date_create())) : ?>
+                    if (isTaskImportant($task["date"], date_create())) : ?>
                     task--important
                 <?php
-                endif; ?>">
-                    <td class="task__select">
-                        <label class="checkbox task__checkbox">
-                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
-                                <?php
-                                if ($task["is_finished"]) : ?>
-                                    checked
-                                <?php
-                                endif; ?>
-                            >
-                            <span class="checkbox__text"><?= esc($task["task_name"]) ?></span>
-                        </label>
-                    </td>
-                    <td class="task__file">
-                        <?php
-                        if ($task["file"]) : ?>
-                            <a class="download-link" href="<?= esc($task["file"]) ?>"><?= str_replace(
-                                    "uploads/",
-                                    "",
-                                    esc($task["file"])
-                                ) ?></a>
-                        <?php
-                        endif; ?>
-                    </td>
-                    <td class="task__date"><?= esc($task["date"]) ?></td>
-                </tr>
+                    endif; ?>">
+                        <td class="task__select">
+                            <label class="checkbox task__checkbox">
+                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
+                                    <?php
+                                    if ($task["is_finished"]) : ?>
+                                        checked
+                                    <?php
+                                    endif; ?>
+                                >
+                                <span class="checkbox__text"><?= esc($task["task_name"]) ?></span>
+                            </label>
+                        </td>
+                        <td class="task__file">
+                            <?php
+                            if ($task["file"]) : ?>
+                                <a class="download-link" href="<?= esc($task["file"]) ?>"><?= str_replace(
+                                        "uploads/",
+                                        "",
+                                        esc($task["file"])
+                                    ) ?></a>
+                            <?php
+                            endif; ?>
+                        </td>
+                        <td class="task__date"><?= esc($task["date"]) ?></td>
+                    </tr>
+                <?php
+                endforeach; ?>
             <?php
-            endforeach; ?>
+            endif; ?>
         </table>
     </main>
 </div>
