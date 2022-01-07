@@ -285,7 +285,7 @@ function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
     WHERE t.user_id = ? AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
 
 
-    $result = getUserStmtResult($selectTasksByQuery, ["user_id" => $userId, "query" => $query], $con);
+    $result = getUserStmtResult($selectTasksByQuery, ["user_id" => $userId, "query" => trim($query)], $con);
     if ($result) {
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     } else {
