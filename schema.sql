@@ -1,6 +1,6 @@
-/*CREATE DATABASE IF NOT EXISTS doingsdone_no_spooks_allowed;
-*/
-/*USE doingsdone_no_spooks_allowed;*/
+CREATE DATABASE IF NOT EXISTS doingsdone_no_spooks_allowed;
+
+USE doingsdone_no_spooks_allowed;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users
   name              VARCHAR(70)  NOT NULL,
   email             VARCHAR(255) NOT NULL,
   password          VARCHAR(60)  NOT NULL,
-  registration_time DATETIME     NOT NULL
+  registration_time DATETIME     NOT NULL,
+  UNIQUE KEY unique_email (email)
 );
 
 CREATE TABLE IF NOT EXISTS projects
@@ -31,5 +32,6 @@ CREATE TABLE IF NOT EXISTS tasks
   project_id    INT UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (project_id) REFERENCES projects (id),
-  INDEX status (status)
+  INDEX status (status),
+  FULLTEXT INDEX name(name)
 );

@@ -15,7 +15,8 @@
   "require-dev": {
     "phpunit/phpunit": "^9.5",
     "league/factory-muffin": "^3.3",
-    "league/factory-muffin-faker": "^2.3"
+    "league/factory-muffin-faker": "^2.3",
+    "ext-json": "*"
   },
   "require": {
     "ext-mysqli": "*",
