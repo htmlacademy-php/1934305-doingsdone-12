@@ -348,7 +348,25 @@ function createUserSession(string $formPassword, array $user): ?string
  */
 function makeProjectFormArray(): array
 {
-    $expectedField = ["name"];
+    $expectedField = ["project_name"];
 
     return makeArrayFromFormInput($expectedField);
+}
+
+/**
+ * Проверяет данные для добавления проекта введённые из формы на ошибки
+ * @param array $projectForm массив данных введённых из формы
+ * @param mysqli $con - объект подключения к БД
+ * @return array массив ошибок
+ */
+function validateProjectForm(array $projectForm, mysqli $con): array
+{
+    $isProjectInDB = isProjectExistsInDB($con, $projectForm["project_name"], $projectForm["user_id"]);
+    $errors = [];
+
+    if ($isProjectInDB === true) {
+        $errors["project_name"] = "Данный проект уже добавлен для этого пользователя";
+    }
+
+    return array_filter($errors);
 }
