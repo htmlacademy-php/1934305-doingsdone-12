@@ -5,6 +5,7 @@ const ADD_SCRIPT = "add.php";
 const LOGOUT_SCRIPT = "logout.php";
 const AUTH_SCRIPT = "auth.php";
 const REGISTER_SCRIPT = "register.php";
+const PROJECT_SCRIPT = "project.php";
 
 session_start();
 require_once __DIR__ . "/vendor/autoload.php";
