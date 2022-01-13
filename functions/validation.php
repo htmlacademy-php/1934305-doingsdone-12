@@ -341,3 +341,14 @@ function createUserSession(string $formPassword, array $user): ?string
 
     return "Неверный пароль";
 }
+
+/**
+ * Создаёт массив из формы для добавления проекта
+ * @return array отфильтрованный массив данных из формы для добавления проекта
+ */
+function makeProjectFormArray(): array
+{
+    $expectedField = ["name"];
+
+    return makeArrayFromFormInput($expectedField);
+}
