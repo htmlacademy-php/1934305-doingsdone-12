@@ -19,10 +19,10 @@ class CreateNewProjectTest extends TestCase
 
     public function testCreateNewProject()
     {
-        $newProject = ["name" => "Входящие", "user_id" => $this->userId];
+        $newProject = ["project_name" => "Входящие", "user_id" => $this->userId];
         $this->assertEquals(true, createNewProject(Database::$con, $newProject));
 
-        $falseProject = ["name" => "Входящие", "user_id" => 2];
+        $falseProject = ["project_name" => "Входящие", "user_id" => 2];
         $this->assertEquals(false, createNewProject(Database::$con, $falseProject));
     }
 

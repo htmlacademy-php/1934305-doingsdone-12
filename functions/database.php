@@ -339,7 +339,7 @@ function createNewProject(mysqli $con, array $projectForm): bool
 {
     $sqlQuery = "INSERT INTO projects (name, user_id) VALUES (?, ?)";
 
-    $stmt = dbGetPrepareStmt($con, $sqlQuery, [$projectForm["name"], $projectForm["user_id"]]);
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, [$projectForm["project_name"], $projectForm["user_id"]]);
 
     return mysqli_stmt_execute($stmt);
 }
