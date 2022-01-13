@@ -15,6 +15,25 @@ $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 $projects = getProjects($con, $userId);
 
 $errors = [];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $projectForm = makeProjectFormArray();
+    $projectForm["user_id"] = $userId;
+
+    $errors = validateProjectForm($projectForm, $con);
+
+    if (empty($errors)) {
+        $res = createNewProject($con, $projectForm);
+
+        if ($res) {
+            header("Location: index.php");
+        } else {
+            $mysqliError = mysqli_error($con);
+            renderError($mysqliError);
+        }
+        exit();
+    }
+}
+
 $projectsSideTemplate = includeTemplate("projects-side.php", [
     "projects" => $projects,
     "scriptName" => pathinfo("index.php", PATHINFO_BASENAME),
