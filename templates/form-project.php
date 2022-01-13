@@ -13,7 +13,7 @@
             <div class="form__row">
                 <label class="form__label" for="project_name">Название <sup>*</sup></label>
 
-                <input class="form__input" type="text" name="name" id="project_name" value=""
+                <input class="form__input" type="text" name="project_name" id="project_name" value=""
                        placeholder="Введите название проекта">
             </div>
 
