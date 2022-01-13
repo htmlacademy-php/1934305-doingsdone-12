@@ -328,3 +328,18 @@ function isProjectExistsInDB(mysqli $con, string $project, int $userId): bool
 
     return true;
 }
+
+/**
+ * Создаёт новый проект для пользователя
+ * @param mysqli $con - объект подключения к БД
+ * @param array $projectForm - имя нового проекта пользователя из формы
+ * @return bool - результат выполнения запроса к БД
+ */
+function createNewProject(mysqli $con, array $projectForm): bool
+{
+    $sqlQuery = "INSERT INTO projects (name, user_id) VALUES (?, ?)";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, [$projectForm["name"], $projectForm["user_id"]]);
+
+    return mysqli_stmt_execute($stmt);
+}
