@@ -296,3 +296,35 @@ function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
 
     return empty($tasks) ? null : $tasks;
 }
+
+/**
+ * Проверяет существует ли проект для конкретного пользователя
+ * @param mysqli $con - объект подключения к БД
+ * @param string $project - имя проекта введённый из формы
+ * @param int $userId - идентификатор пользователя
+ * @return bool -- возвращает true, если существует. Возвращает false в ином случае
+ */
+function isProjectExistsInDB(mysqli $con, string $project, int $userId): bool
+{
+    $sqlQuery = "SELECT id FROM projects WHERE user_id = ? AND name = ?";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, ["user_id" => $userId, "name" => $project]);
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result) {
+        $projectId = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    if (empty($projectId)) {
+        return false;
+    }
+
+    return true;
+}
