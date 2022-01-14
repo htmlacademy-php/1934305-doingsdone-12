@@ -52,7 +52,8 @@
                     endif; ?>">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
+                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox"
+                                       value="<?= $task["task_id"] ?>"
                                     <?php
                                     if ($task["is_finished"]) : ?>
                                         checked
