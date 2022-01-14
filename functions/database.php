@@ -124,7 +124,7 @@ function getProjects(mysqli $con, int $userId): array
 function getTasksAll(mysqli $con, int $userId): array
 {
     $selectTasksById =
-        "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ?";
@@ -152,7 +152,7 @@ function getTasksAll(mysqli $con, int $userId): array
 function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
 {
     $selectTasksById =
-        "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND p.id = ?";
@@ -279,7 +279,7 @@ function getUserCredentials(mysqli $con, string $email): ?array
 function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
 {
     $selectTasksByQuery =
-        "SELECT t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
