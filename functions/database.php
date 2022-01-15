@@ -357,5 +357,7 @@ function updateStatusTask(mysqli $con, int $userId, int $taskId): bool
 
     $stmt = dbGetPrepareStmt($con, $sqlQuery, ["user_id" => $userId, "id" => $taskId]);
 
-    return mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute($stmt);
+
+    return mysqli_stmt_affected_rows($stmt);
 }
