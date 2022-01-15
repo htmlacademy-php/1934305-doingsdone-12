@@ -343,3 +343,19 @@ function createNewProject(mysqli $con, array $projectForm): bool
 
     return mysqli_stmt_execute($stmt);
 }
+
+/**
+ * Переключает статус готовности задачи проекта
+ * @param mysqli $con - объект подключения к БД
+ * @param int $userId - идентификатор пользователя
+ * @param int $taskId - идентификатор задачи
+ * @return bool - результат выполнения запроса к БД
+ */
+function updateStatusTask(mysqli $con, int $userId, int $taskId): bool
+{
+    $sqlQuery = "UPDATE tasks SET status = IF(status=1, 0, 1) WHERE user_id = ? AND id = ?";
+
+    $stmt = dbGetPrepareStmt($con, $sqlQuery, ["user_id" => $userId, "id" => $taskId]);
+
+    return mysqli_stmt_execute($stmt);
+}
