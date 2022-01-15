@@ -19,9 +19,23 @@ if (!isset($_SESSION["user"])) {
     exit();
 }
 
-$showCompleteTasks = 1;
+if (!isset($_SESSION["show_complete_tasks"])) {
+    $_SESSION["show_complete_tasks"] = 1;
+}
+
+if (isset($_GET["show_completed"])) {
+    $_SESSION["show_complete_tasks"] = filter_input(INPUT_GET, "show_completed", FILTER_SANITIZE_NUMBER_INT);
+}
+
+$showCompleteTasks = (int) $_SESSION["show_complete_tasks"];
 
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
+
+$taskId = filter_input(INPUT_GET, "task_id", FILTER_SANITIZE_NUMBER_INT);
+
+if ($taskId) {
+    updateStatusTask($con, $userId, $taskId);
+}
 
 $projects = [];
 
