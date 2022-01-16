@@ -390,3 +390,31 @@ function getTasksByDate(mysqli $con, int $userId, string $date): array
 
     return $tasks;
 }
+
+/**
+ * Возвращает массив просроченных задач из БД
+ * @param mysqli $con - объект подключения к БД
+ * @param int $userId - номер айди пользователя
+ * @param string $date - дата задач
+ * @return array - массив задач
+ */
+function getOverdueTasks(mysqli $con, int $userId, string $date): array
+{
+    $selectTasksById =
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+    FROM tasks AS t
+    JOIN projects AS p ON t.project_id = p.id
+    WHERE t.user_id = ? AND t.end_time < ?";
+
+
+    $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "end_time" => $date], $con);
+    if ($result) {
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    } else {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    return $tasks;
+}
