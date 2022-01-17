@@ -404,7 +404,7 @@ function getOverdueTasks(mysqli $con, int $userId, string $date): array
         "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
-    WHERE t.user_id = ? AND t.end_time < ?";
+    WHERE t.user_id = ? AND t.end_time < ? AND t.status = 0";
 
 
     $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "end_time" => $date], $con);
