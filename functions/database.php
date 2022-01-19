@@ -104,15 +104,13 @@ function getProjects(mysqli $con, int $userId): array
                 p.id, p.name;";
 
     $result = getUserStmtResult($selectProjectsById, ["user_id" => $userId], $con);
-    if ($result) {
-        $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    return $projects;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
@@ -131,15 +129,13 @@ function getTasksAll(mysqli $con, int $userId): array
 
 
     $result = getUserStmtResult($selectTasksById, ["user_id" => $userId], $con);
-    if ($result) {
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    return $tasks;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
@@ -159,15 +155,13 @@ function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
 
 
     $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "project_id" => $projectId], $con);
-    if ($result) {
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    return $tasks;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
@@ -206,19 +200,13 @@ function isEmailExistsInDB(mysqli $con, string $email): bool
 
     $result = mysqli_stmt_get_result($stmt);
 
-    if ($result) {
-        $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    if (empty($user)) {
-        return false;
-    }
-
-    return true;
+    return mysqli_num_rows($result);
 }
 
 /**
@@ -255,14 +243,13 @@ function getUserCredentials(mysqli $con, string $email): ?array
 
     $result = mysqli_stmt_get_result($stmt);
 
-    if ($result) {
-        $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
+    $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
     if (empty($user)) {
         return null;
     }
@@ -286,14 +273,13 @@ function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
 
 
     $result = getUserStmtResult($selectTasksByQuery, ["user_id" => $userId, "query" => trim($query)], $con);
-    if ($result) {
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     return empty($tasks) ? null : $tasks;
 }
 
@@ -314,19 +300,13 @@ function isProjectExistsInDB(mysqli $con, string $project, int $userId): bool
 
     $result = mysqli_stmt_get_result($stmt);
 
-    if ($result) {
-        $projectId = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    if (empty($projectId)) {
-        return false;
-    }
-
-    return true;
+    return mysqli_num_rows($result);
 }
 
 /**
@@ -380,15 +360,13 @@ function getTasksByDate(mysqli $con, int $userId, string $date): array
 
 
     $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "end_time" => $date], $con);
-    if ($result) {
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    return $tasks;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
@@ -408,13 +386,11 @@ function getOverdueTasks(mysqli $con, int $userId, string $date): array
 
 
     $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "end_time" => $date], $con);
-    if ($result) {
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
+    if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
         exit();
     }
 
-    return $tasks;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
