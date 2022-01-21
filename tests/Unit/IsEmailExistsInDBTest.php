@@ -15,7 +15,6 @@ class IsEmailExistsInDBTest extends TestCase
         createNewUser(Database::$con, ["name" => "Вася", "password" => "12345678", "email" => "ddd1@mail.ru"]);
         createNewUser(Database::$con, ["name" => "Вася", "password" => "12345678", "email" => "ddd2@mail.ru"]);
         createNewUser(Database::$con, ["name" => "Вася", "password" => "12345678", "email" => "ddd3@mail.ru"]);
-
     }
 
     public function testIsEmailExistsInDB()
@@ -35,5 +34,4 @@ class IsEmailExistsInDBTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

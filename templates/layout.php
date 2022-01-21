@@ -27,7 +27,7 @@
 
             <div class="main-header__side">
                 <?php
-                if (!empty($_SESSION)): ?>
+                if (!empty($_SESSION)) : ?>
                     <a class="main-header__side-item button button--plus open-modal"
                        href="<?= makeURL(ADD_SCRIPT, []) ?>">Добавить
                         задачу</a>
@@ -39,11 +39,11 @@
                             <a href="<?= makeURL(LOGOUT_SCRIPT, []) ?>">Выйти</a>
                         </div>
                     </div>
-                <?php
+                    <?php
                 else : ?>
                     <a class="main-header__side-item button button--transparent"
                        href="<?= makeURL(AUTH_SCRIPT, []) ?>">Войти</a>
-                <?php
+                    <?php
                 endif ?>
             </div>
         </header>
@@ -59,9 +59,10 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
         <?php
-        if (!empty($_SESSION)): ?>
-            <a class="main-footer__button button button--plus" href="<?= makeURL(ADD_SCRIPT, []) ?>">Добавить задачу</a>
-        <?php
+        if (!empty($_SESSION)) : ?>
+            <a class="main-footer__button button button--plus" href="<?= makeURL(ADD_SCRIPT, []) ?>">
+                Добавить задачу</a>
+            <?php
         endif; ?>
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

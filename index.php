@@ -1,4 +1,5 @@
 <?php
+
 /* @var mysqli $con
  * @var string $title
  * @var int $userId
@@ -7,7 +8,6 @@
 require_once "init.php";
 
 if (!isset($_SESSION["user"])) {
-
     $pageContent = includeTemplate("guest.php");
 
     $layoutContent = includeTemplate("layout.php", [

@@ -22,27 +22,27 @@
                 <?php
                 if ($btnActive["all_tasks"] ?? null) : ?>
                 tasks-switch__item--active
-                <?php
+                    <?php
                 endif; ?>">
                     Все задачи</a>
                 <a href="<?= makeURL($scriptName, ["current_day" => 1]) ?>" class="tasks-switch__item
             <?php
-                if ($btnActive["current_day"] ?? null) : ?>
+            if ($btnActive["current_day"] ?? null) : ?>
                 tasks-switch__item--active
                 <?php
-                endif; ?>">Повестка дня</a>
+            endif; ?>">Повестка дня</a>
                 <a href="<?= makeURL($scriptName, ["tomorrow" => 1]) ?>" class="tasks-switch__item
  <?php
-                if ($btnActive["tomorrow"] ?? null) : ?>
+    if ($btnActive["tomorrow"] ?? null) : ?>
                 tasks-switch__item--active
                 <?php
-                endif; ?>">Завтра</a>
+    endif; ?>">Завтра</a>
                 <a href="<?= makeURL($scriptName, ["overdue" => 1]) ?>" class="tasks-switch__item
 <?php
-                if ($btnActive["overdue"] ?? null) : ?>
+if ($btnActive["overdue"] ?? null) : ?>
                 tasks-switch__item--active
                 <?php
-                endif; ?>
+endif; ?>
 ">Просроченные</a>
             </nav>
             <label class="checkbox">
@@ -50,7 +50,7 @@
                     <?php
                     if ($showCompleteTasks) : ?>
                         checked
-                    <?php
+                        <?php
                     endif; ?>>
                 <span class="checkbox__text">Показывать выполненные</span>
             </label>
@@ -59,7 +59,7 @@
             <?php
             if ($tasks === null) : ?>
                 <p>Ничего не найдено по вашему запросу</p>
-            <?php
+                <?php
             else : ?>
                 <?php
                 foreach ($tasks as $task) : ?>
@@ -69,10 +69,10 @@
                     }
                     ?>
                     <tr class="tasks__item task
-                <?php
+                    <?php
                     if (isTaskImportant($task["date"], date_create())) : ?>
                     task--important
-                <?php
+                        <?php
                     endif; ?>">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
@@ -81,7 +81,7 @@
                                     <?php
                                     if ($task["is_finished"]) : ?>
                                         checked
-                                    <?php
+                                        <?php
                                     endif; ?>
                                 >
                                 <span class="checkbox__text"><?= esc($task["task_name"]) ?></span>
@@ -90,19 +90,16 @@
                         <td class="task__file">
                             <?php
                             if ($task["file"]) : ?>
-                                <a class="download-link" href="<?= esc($task["file"]) ?>"><?= str_replace(
-                                        "uploads/",
-                                        "",
-                                        esc($task["file"])
-                                    ) ?></a>
-                            <?php
+                                <a class="download-link" href="
+                                <?= esc($task["file"]) ?>"><?= str_replace("uploads/", "", esc($task["file"])) ?></a>
+                                <?php
                             endif; ?>
                         </td>
                         <td class="task__date"><?= esc($task["date"]) ?></td>
                     </tr>
-                <?php
+                    <?php
                 endforeach; ?>
-            <?php
+                <?php
             endif; ?>
         </table>
     </main>

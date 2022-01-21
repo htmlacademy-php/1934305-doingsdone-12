@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
+ * Создает подготовленное выражение на
+ * основе готового SQL запроса и переданных данных
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
  *
  * @return mysqli_stmt Подготовленное выражение
@@ -14,7 +15,8 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data): mysqli_stmt
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
-        $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link);
+        $errorMsg = 'Не удалось инициализировать'
+            . 'подготовленное выражение: ' . mysqli_error($link);
         die($errorMsg);
     }
 
@@ -43,7 +45,8 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data): mysqli_stmt
         $func(...$values);
 
         if (mysqli_errno($link) > 0) {
-            $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link);
+            $errorMsg = 'Не удалось связать подготовленное'
+                . 'выражение с параметрами: ' . mysqli_error($link);
             die($errorMsg);
         }
     }
@@ -52,7 +55,8 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data): mysqli_stmt
 }
 
 /**
- * Возвращает результат работы подготовленного выражения для дальнейшей обраотки данных пользователя
+ * Возвращает результат работы подготовленного
+ * выражения для дальнейшей обраотки данных пользователя
  * @param string $sqlQuery - подготовленная строка SQL запроса
  * @param array $params - параметры запроса
  * @param @con - информация для соединения с БД
@@ -67,8 +71,10 @@ function getUserStmtResult(string $sqlQuery, array $params, $con): mysqli_result
 }
 
 /**
- * Возвращает результат работы подготовленного выражения для дальнейшей обраотки данных пользователя
- * @param array $db - ассоциативный массив с конфигом для подключения к базе данных
+ * Возвращает результат работы подготовленного
+ * выражения для дальнейшей обраотки данных пользователя
+ * @param array $db - ассоциативный массив
+ * с конфигом для подключения к базе данных
  * @return mysqli - объект подключения к БД
  */
 function makeConnection(array $db): mysqli
@@ -122,7 +128,8 @@ function getProjects(mysqli $con, int $userId): array
 function getTasksAll(mysqli $con, int $userId): array
 {
     $selectTasksById =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time
+        AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ?";
@@ -148,7 +155,8 @@ function getTasksAll(mysqli $con, int $userId): array
 function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
 {
     $selectTasksById =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name,
+       t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND p.id = ?";
@@ -188,7 +196,8 @@ function createNewTask(mysqli $con, array $taskForm): bool
  * Проверяет существует ли почтовая запись в БД
  * @param mysqli $con - объект подключения к БД
  * @param string $email - почтовый адрес введённый из формы
- * @return bool -- возвращает true, если существует. Возвращает false в ином случае
+ * @return bool -- возвращает true, если существует.
+ * Возвращает false в ином случае
  */
 function isEmailExistsInDB(mysqli $con, string $email): bool
 {
@@ -231,7 +240,8 @@ function createNewUser(mysqli $con, array $registerForm): bool
  * Получает данные для входа пользователя из БД
  * @param mysqli $con - объект подключения к БД
  * @param string $email - почтовый адрес введённый из формы
- * @return array - возвращает ассоциативный массив с данными о пользователе или null
+ * @return array|null - возвращает ассоциативный
+ * массив с данными о пользователе или null
  */
 function getUserCredentials(mysqli $con, string $email): ?array
 {
@@ -266,7 +276,8 @@ function getUserCredentials(mysqli $con, string $email): ?array
 function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
 {
     $selectTasksByQuery =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date,
+       p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
@@ -288,7 +299,8 @@ function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
  * @param mysqli $con - объект подключения к БД
  * @param string $project - имя проекта введённый из формы
  * @param int $userId - идентификатор пользователя
- * @return bool -- возвращает true, если существует. Возвращает false в ином случае
+ * @return bool -- возвращает true,
+ * если существует. Возвращает false в ином случае
  */
 function isProjectExistsInDB(mysqli $con, string $project, int $userId): bool
 {
@@ -353,7 +365,8 @@ function updateStatusTask(mysqli $con, int $userId, int $taskId): bool
 function getTasksByDate(mysqli $con, int $userId, string $date): array
 {
     $selectTasksById =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
+       t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND t.end_time = ?";
@@ -379,7 +392,8 @@ function getTasksByDate(mysqli $con, int $userId, string $date): array
 function getOverdueTasks(mysqli $con, int $userId, string $date): array
 {
     $selectTasksById =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
+       t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND t.end_time < ? AND t.status = 0";

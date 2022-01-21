@@ -13,17 +13,16 @@
             foreach ($projects as $project) : ?>
                 <li class="main-navigation__list-item
                     <?php
-                if ($projectId !== null && (int)$projectId === $project["id"]) : ?>
+                    if ($projectId !== null && (int)$projectId === $project["id"]) : ?>
                         main-navigation__list-item--active
-                    <?php
-                endif; ?>
+                        <?php
+                    endif; ?>
                     ">
                     <a class="main-navigation__list-item-link"
-                       href="<?= makeURL($scriptName, ["project_id" => $project["id"]]
-                       ) ?>"><?= $project["name"] ?></a>
+                       href="<?= makeURL($scriptName, ["project_id" => $project["id"]]) ?>"><?= $project["name"] ?></a>
                     <span class="main-navigation__list-item-count"><?= $project["amount"] ?></span>
                 </li>
-            <?php
+                <?php
             endforeach; ?>
         </ul>
     </nav>

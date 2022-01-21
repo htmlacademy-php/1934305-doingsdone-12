@@ -17,7 +17,8 @@ class CreateNewUserTest extends TestCase
         $user = ["name" => "Вася", "password" => "12345678", "email" => "ddd@mail.ru"];
         $this->assertEquals(true, createNewUser(Database::$con, $user));
 
-        // теперь оно должно вернуть false из-за уникальности поля email в БД
+        // теперь оно должно вернуть false из-за уникальности
+        // поля email в БД
         $this->assertEquals(false, createNewUser(Database::$con, $user));
     }
 

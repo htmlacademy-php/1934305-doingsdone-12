@@ -28,10 +28,34 @@ class GetTasksByQueryTest extends TestCase
                             (\"Авто\", {$this->userId});"
         );
 
-        $task1 = ["name" => "Поесть пиццу", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $task2 = ["name" => "Поесть кальмаров", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $task3 = ["name" => "Погулять в деревне", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $task4 = ["name" => "Погулять по городу", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
+        $task1 = [
+            "name" => "Поесть пиццу",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $task2 = [
+            "name" => "Поесть кальмаров",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $task3 = [
+            "name" => "Погулять в деревне",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $task4 = [
+            "name" => "Погулять по городу",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
         createNewTask(Database::$con, $task1);
         createNewTask(Database::$con, $task2);
         createNewTask(Database::$con, $task3);
@@ -65,5 +89,4 @@ class GetTasksByQueryTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

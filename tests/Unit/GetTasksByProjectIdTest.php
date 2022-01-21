@@ -28,7 +28,13 @@ class GetTasksByProjectIdTest extends TestCase
                             (\"Авто\", {$this->userId});"
         );
 
-        $taskThresholds = ["name" => "task1", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
+        $taskThresholds = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
 
         for ($i = 0; $i < 6; $i++) {
             createNewTask(Database::$con, $taskThresholds);
@@ -39,7 +45,6 @@ class GetTasksByProjectIdTest extends TestCase
         for ($i = 0; $i < 6; $i++) {
             createNewTask(Database::$con, $taskThresholds);
         }
-
     }
 
     public function testGetTasksByProjectId()
@@ -65,5 +70,4 @@ class GetTasksByProjectIdTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

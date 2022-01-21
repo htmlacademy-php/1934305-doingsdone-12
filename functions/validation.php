@@ -23,10 +23,12 @@ function isDateValid(string $date): bool
 }
 
 /**
- * Определяет является ли дата датой, для выполнения которой осталось меньше 24 часов
+ * Определяет является ли дата датой,
+ * для выполнения которой осталось меньше 24 часов
  * @param string|null $dateStr дата в виде строки так же может быть null
  * @param DateTime $dtNow текущая дата
- * @return bool если количество часов до выполнения задачи меньше или равно 24 возвращает true, иначе false
+ * @return bool если количество часов до выполнения
+ * задачи меньше или равно 24 возвращает true, иначе false
  */
 function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
 {
@@ -36,8 +38,10 @@ function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
 
     $dtEnd = date_create($dateStr);
 
-    // Т.к. в данных у даты не указанны часы, то дата создаётся в часовом диапазоне 00:00
-    // но в задаче подразумевается, что дата считается с конца дня, а не с начала, для этого
+    // Т.к. в данных у даты не указанны часы,
+    // то дата создаётся в часовом диапазоне 00:00
+    // но в задаче подразумевается, что дата считается
+    // с конца дня, а не с начала, для этого
     // добавляю еще 24 часа к созданной дате.
     $dtEnd->modify("+1 day");
 
@@ -54,7 +58,8 @@ function isTaskImportant(?string $dateStr, DateTime $dtNow): bool
 }
 
 /**
- * Проверяет строку на пустоту. Возвращает сообщение об ошибке или null
+ * Проверяет строку на пустоту.
+ * Возвращает сообщение об ошибке или null
  * @param string $value строка из формы
  * @return string|null сообщение об ошибке или null
  */
@@ -74,7 +79,8 @@ function validateTaskName(string $value): ?string
 }
 
 /**
- * Проверяет является ли выбранное имя проекта существующим для этого пользователя.
+ * Проверяет является ли выбранное
+ * имя проекта существующим для этого пользователя.
  * Возвращает сообщение об ошибке или null
  * @param int $id номер проекта из формы
  * @param array $projectsId массив id проектов
@@ -122,8 +128,10 @@ function validateDate(string $dateStr, string $curDate): ?string
 function validateTaskForm(array $taskForm, array $projectsId, string $curDate): array
 {
     $errors = [];
-    // приравниваю значение из $taskForm к инту, чтобы если кто-то попытается отправить форму
-    // с пустым значением или строку это значение просто преобразовалось бы к 0
+    // приравниваю значение из $taskForm к инту,
+    // чтобы если кто-то попытается отправить форму
+    // с пустым значением или строку
+    // это значение просто преобразовалось бы к 0
     $errors["project_id"] = validateProject((int)$taskForm["project_id"], $projectsId);
     $errors["name"] = validateTaskName($taskForm["name"]);
     $errors["end_time"] = validateDate($taskForm["end_time"], $curDate);
@@ -132,9 +140,11 @@ function validateTaskForm(array $taskForm, array $projectsId, string $curDate): 
 }
 
 /**
- * Генерирурет уникальное имя загруженному файлу и переносит его из временной папки в папку проекта
+ * Генерирурет уникальное имя загруженному файлу и
+ * переносит его из временной папки в папку проекта
  * @return string|null путь загруженного файла или null
  */
+// TODO: переименовать в fileupload или savefile и т.д.
 function validateFileUpload(): ?string
 {
     $path = $_FILES["file"]["tmp_name"];
@@ -150,7 +160,8 @@ function validateFileUpload(): ?string
 }
 
 /**
- * Проверяет на корректность введёный email адрес из формы специфичной только для регистрации
+ * Проверяет на корректность введёный email
+ * адрес из формы специфичной только для регистрации
  * @param string $email -- введённый email адрес пользователем
  * @param bool $isEmailInDB -- результат проверки на занятность email адреса
  * @return string|null сообщение об ошибке или null
@@ -175,7 +186,8 @@ function validateEmailReg(string $email, bool $isEmailInDB): ?string
 }
 
 /**
- * Проверяет на корректность введёный email адрес из формы специфичной только для аутентификации
+ * Проверяет на корректность введёный
+ * email адрес из формы специфичной только для аутентификации
  * @param string $email -- введённый email адрес пользователем
  * @param bool $isEmailInDB -- результат проверки на занятность email адреса
  * @return string|null сообщение об ошибке или null
@@ -329,7 +341,8 @@ function validateAuthForm(array $authForm, mysqli $con): array
  * Валидирует юзера по данным входа и создаёт сессию.
  * @param string $formPassword - пароль из формы
  * @param array $user - ассоциативный массив пользователя из БД
- * @return string - строку с описание ошибки или null если пароль верифицирован
+ * @return string|null - строку с описание ошибки
+ * или null если пароль верифицирован
  */
 function createUserSession(string $formPassword, array $user): ?string
 {
@@ -344,7 +357,8 @@ function createUserSession(string $formPassword, array $user): ?string
 
 /**
  * Создаёт массив из формы для добавления проекта
- * @return array отфильтрованный массив данных из формы для добавления проекта
+ * @return array отфильтрованный массив данных
+ * из формы для добавления проекта
  */
 function makeProjectFormArray(): array
 {
@@ -354,7 +368,8 @@ function makeProjectFormArray(): array
 }
 
 /**
- * Проверяет данные для добавления проекта введённые из формы на ошибки
+ * Проверяет данные для добавления
+ * проекта введённые из формы на ошибки
  * @param array $projectForm массив данных введённых из формы
  * @param mysqli $con - объект подключения к БД
  * @return array массив ошибок
@@ -365,7 +380,8 @@ function validateProjectForm(array $projectForm, mysqli $con): array
     $errors = [];
 
     if ($isProjectInDB === true) {
-        $errors["project_name"] = "Данный проект уже добавлен для этого пользователя";
+        $errors["project_name"] =
+            "Данный проект уже добавлен для этого пользователя";
     }
 
     return array_filter($errors);
@@ -395,10 +411,11 @@ function getQueriesWrapper(): array
  * Обёртка над всеми запросами задач в базу
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - идентификатор пользователя
- * @param array $queryStringsValues - ассоциативный массив со значениями из GET - запросов
+ * @param array $queryStringsValues - ассоциативный массив
+ * со значениями из GET - запросов
  * @return array|null - массив задач
  */
-function getTasksWrapper(mysqli $con, int $userId, array& $queryStringsValues): ?array
+function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues): ?array
 {
     if ($queryStringsValues["project_id"]) {
         return getTasksByProjectId($con, $userId, $queryStringsValues["project_id"]);

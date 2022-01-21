@@ -19,7 +19,7 @@
                 <?php
                 if (isset($errors["email"])) : ?>
                     <p class="form__message"><?= $errors["email"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
@@ -33,7 +33,7 @@
                 <?php
                 if (isset($errors["password"])) : ?>
                     <p class="form__message"><?= $errors["password"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
@@ -46,7 +46,7 @@
                 <?php
                 if (isset($errors["name"])) : ?>
                     <p class="form__message"><?= $errors["name"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
@@ -54,7 +54,7 @@
                 <?php
                 if (!empty($errors)) : ?>
                     <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
-                <?php
+                    <?php
                 endif ?>
                 <input class="button" type="submit" name="" value="Зарегистрироваться">
             </div>

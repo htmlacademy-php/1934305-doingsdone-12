@@ -28,13 +28,25 @@ class GetTasksByDateTest extends TestCase
                             (\"Авто\", {$this->userId});"
         );
 
-        $taskThresholds = ["name" => "task1", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
+        $taskThresholds = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
 
         for ($i = 0; $i < 12; $i++) {
             createNewTask(Database::$con, $taskThresholds);
         }
 
-        $taskThresholds = ["name" => "task1", "project_id" => 1, "end_time" => "2021-1-2", "user_id" => $this->userId, "file" => ""];
+        $taskThresholds = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-2",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
 
         for ($i = 0; $i < 3; $i++) {
             createNewTask(Database::$con, $taskThresholds);
@@ -46,10 +58,18 @@ class GetTasksByDateTest extends TestCase
         $this->assertEquals([], getTasksByDate(Database::$con, 666, date_create("2021-1-1")->format("Y-m-d")));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks.json"), true);
-        $this->assertEquals($expected, getTasksByDate(Database::$con, $this->userId, date_create("2021-1-1")->format("Y-m-d")));
+        $this->assertEquals($expected, getTasksByDate(
+            Database::$con,
+            $this->userId,
+            date_create("2021-1-1")->format("Y-m-d")
+        ));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-one-plus-date.json"), true);
-        $this->assertEquals($expected, getTasksByDate(Database::$con, $this->userId, date_create("2021-1-1")->modify("+1 day")->format("Y-m-d")));
+        $this->assertEquals($expected, getTasksByDate(
+            Database::$con,
+            $this->userId,
+            date_create("2021-1-1")->modify("+1 day")->format("Y-m-d")
+        ));
     }
 
     public function tearDown(): void
@@ -62,5 +82,4 @@ class GetTasksByDateTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

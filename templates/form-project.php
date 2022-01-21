@@ -19,7 +19,7 @@
                 <?php
                 if (isset($errors["project_name"])) : ?>
                     <p class="form__message"> <?= $errors["project_name"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 

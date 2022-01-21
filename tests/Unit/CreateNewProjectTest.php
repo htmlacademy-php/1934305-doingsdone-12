@@ -14,7 +14,6 @@ class CreateNewProjectTest extends TestCase
         $user = ["name" => "Вася", "password" => "12345678", "email" => "ddd@mail.ru"];
         createNewUser(Database::$con, $user);
         $this->userId = mysqli_insert_id(Database::$con);
-
     }
 
     public function testCreateNewProject()
@@ -36,5 +35,4 @@ class CreateNewProjectTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

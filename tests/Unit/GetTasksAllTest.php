@@ -28,12 +28,17 @@ class GetTasksAllTest extends TestCase
                             (\"Авто\", {$this->userId});"
         );
 
-        $taskThresholds = ["name" => "task1", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
+        $taskThresholds = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
 
         for ($i = 0; $i < 12; $i++) {
             createNewTask(Database::$con, $taskThresholds);
         }
-
     }
 
     public function testGetTasksAll()
@@ -54,5 +59,4 @@ class GetTasksAllTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

@@ -27,16 +27,45 @@ class CreateNewTaskTest extends TestCase
                             (\"Домашние дела\", {$this->userId}),
                             (\"Авто\", {$this->userId});"
         );
-
     }
 
     public function testCreateNewTask()
     {
-        $taskThresholds = ["name" => "task1", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $emptyTasks = ["name" => null, "project_id" => null, "end_time" => null, "user_id" => null, "file" => null];
-        $emptyNameTask = ["name" => null, "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $emptyProjectIdTask = ["name" => "task1", "project_id" => null, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $emptyUserIdTask = ["name" => "task1", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => null, "file" => ""];
+        $taskThresholds = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $emptyTasks = [
+            "name" => null,
+            "project_id" => null,
+            "end_time" => null,
+            "user_id" => null,
+            "file" => null
+        ];
+        $emptyNameTask = [
+            "name" => null,
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $emptyProjectIdTask = [
+            "name" => "task1",
+            "project_id" => null,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $emptyUserIdTask = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => null,
+            "file" => ""
+        ];
 
         $this->assertEquals(true, createNewTask(Database::$con, $taskThresholds));
         $this->assertEquals(false, createNewTask(Database::$con, $emptyTasks));
@@ -55,5 +84,4 @@ class CreateNewTaskTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }
