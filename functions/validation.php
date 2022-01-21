@@ -82,13 +82,13 @@ function validateTaskName(string $value): ?string
  * Проверяет является ли выбранное
  * имя проекта существующим для этого пользователя.
  * Возвращает сообщение об ошибке или null
- * @param int $id номер проекта из формы
+ * @param int $projectId номер проекта из формы
  * @param array $projectsId массив id проектов
  * @return string|null сообщение об ошибке или null
  */
-function validateProject(int $id, array $projectsId): ?string
+function validateProject(int $projectId, array $projectsId): ?string
 {
-    if (!in_array($id, $projectsId)) {
+    if (!in_array($projectId, $projectsId)) {
         return "Указан несуществующий проект";
     }
 
