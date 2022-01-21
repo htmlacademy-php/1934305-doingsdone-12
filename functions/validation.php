@@ -140,26 +140,6 @@ function validateTaskForm(array $taskForm, array $projectsId, string $curDate): 
 }
 
 /**
- * Генерирурет уникальное имя загруженному файлу и
- * переносит его из временной папки в папку проекта
- * @return string|null путь загруженного файла или null
- */
-// TODO: переименовать в fileupload или savefile и т.д.
-function validateFileUpload(): ?string
-{
-    $path = $_FILES["file"]["tmp_name"];
-    $filename = uniqid() . "__" . $_FILES["file"]["name"];
-
-    $isMoved = move_uploaded_file($path, "uploads/" . $filename);
-
-    if ($isMoved === false) {
-        return null;
-    }
-
-    return "uploads/" . $filename;
-}
-
-/**
  * Проверяет на корректность введёный email
  * адрес из формы специфичной только для регистрации
  * @param string $email -- введённый email адрес пользователем
