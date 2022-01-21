@@ -123,19 +123,28 @@ function getProjects(mysqli $con, int $userId): array
  * Возвращает массив задач из БД
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
+ * @param bool $showCompleteTasks - значение для отображения
+ * законченных задач из БД
  * @return array - массив задач
  */
-function getTasksAll(mysqli $con, int $userId): array
+function getTasksAll(mysqli $con, int $userId, bool $showCompleteTasks): array
 {
-    $selectTasksById =
+    $allTasksQuery =
         "SELECT t.id AS task_id, t.name AS task_name, t.end_time
         AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ?";
 
+    $uncompleteTasksQuery =
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time
+        AS date, p.name AS project, t.status AS is_finished, t.file
+    FROM tasks AS t
+    JOIN projects AS p ON t.project_id = p.id
+    WHERE t.user_id = ? AND t.status = 0";
 
-    $result = getUserStmtResult($selectTasksById, ["user_id" => $userId], $con);
+    $query = ($showCompleteTasks) ? $allTasksQuery : $uncompleteTasksQuery;
+    $result = getUserStmtResult($query, ["user_id" => $userId], $con);
     if (!$result) {
         $error = mysqli_error($con);
         renderError($error);

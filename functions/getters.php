@@ -8,14 +8,14 @@ function getQueriesWrapper(): array
 {
     $queries = [];
 
-    $queries["project_id"] = (int)filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
+    $queries[PROJECT_ID] = (int)filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 
-    $queries["task_id"] = (int)filter_input(INPUT_GET, "task_id", FILTER_SANITIZE_NUMBER_INT);
+    $queries[TASK_ID] = (int)filter_input(INPUT_GET, "task_id", FILTER_SANITIZE_NUMBER_INT);
 
-    $queries["current_day"] = (int)filter_input(INPUT_GET, "current_day", FILTER_SANITIZE_NUMBER_INT);
-    $queries["tomorrow"] = (int)filter_input(INPUT_GET, "tomorrow", FILTER_SANITIZE_NUMBER_INT);
-    $queries["overdue"] = (int)filter_input(INPUT_GET, "overdue", FILTER_SANITIZE_NUMBER_INT);
-    $queries["query"] = filter_input(INPUT_GET, "query", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $queries[CURRENT_DAY] = (int)filter_input(INPUT_GET, "current_day", FILTER_SANITIZE_NUMBER_INT);
+    $queries[TOMORROW] = (int)filter_input(INPUT_GET, "tomorrow", FILTER_SANITIZE_NUMBER_INT);
+    $queries[OVERDUE] = (int)filter_input(INPUT_GET, "overdue", FILTER_SANITIZE_NUMBER_INT);
+    $queries[QUERY] = filter_input(INPUT_GET, "query", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     return $queries;
 }
@@ -30,28 +30,28 @@ function getQueriesWrapper(): array
  */
 function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues): ?array
 {
-    if ($queryStringsValues["project_id"]) {
-        return getTasksByProjectId($con, $userId, $queryStringsValues["project_id"]);
+    if ($queryStringsValues[PROJECT_ID]) {
+        return getTasksByProjectId($con, $userId, $queryStringsValues[PROJECT_ID]);
     }
 
-    if (isset($_GET["query"])) {
-        $query = filter_input(INPUT_GET, "query", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    if (isset($_GET[QUERY])) {
+        $query = filter_input(INPUT_GET, QUERY, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         return getTasksByQuery($con, $userId, $query);
     }
 
-    if ($queryStringsValues["current_day"] === 1) {
+    if ($queryStringsValues[CURRENT_DAY] === 1) {
         return getTasksByDate($con, $userId, date_create()->format("Y-m-d"));
     }
 
-    if ($queryStringsValues["tomorrow"] === 1) {
+    if ($queryStringsValues[TOMORROW] === 1) {
         return getTasksByDate($con, $userId, date_create()->modify("+1 day")->format("Y-m-d"));
     }
 
-    if ($queryStringsValues["overdue"] === 1) {
+    if ($queryStringsValues[OVERDUE] === 1) {
         return getOverdueTasks($con, $userId, date_create()->format("Y-m-d"));
     }
 
-    $queryStringsValues["all_tasks"] = 1;
+    $queryStringsValues[ALL_TASKS] = 1;
 
     return getTasksAll($con, $userId);
 }
