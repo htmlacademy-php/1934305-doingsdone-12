@@ -26,25 +26,27 @@ function getQueriesWrapper(): array
  * @param int $userId - идентификатор пользователя
  * @param array $queryStringsValues - ассоциативный массив
  * со значениями из GET - запросов
+ * @param bool $showCompleteTasks - значение для отображения
+ * законченных задач из БД
  * @return array|null - массив задач
  */
-function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues): ?array
+function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues, bool $showCompleteTasks): ?array
 {
     if ($queryStringsValues[PROJECT_ID]) {
-        return getTasksByProjectId($con, $userId, $queryStringsValues[PROJECT_ID]);
+        return getTasksByProjectId($con, $userId, $queryStringsValues[PROJECT_ID], $showCompleteTasks);
     }
 
     if (isset($_GET[QUERY])) {
         $query = filter_input(INPUT_GET, QUERY, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        return getTasksByQuery($con, $userId, $query);
+        return getTasksByQuery($con, $userId, $query, $showCompleteTasks);
     }
 
     if ($queryStringsValues[CURRENT_DAY] === 1) {
-        return getTasksByDate($con, $userId, date_create()->format("Y-m-d"));
+        return getTasksByDate($con, $userId, date_create()->format("Y-m-d"), $showCompleteTasks);
     }
 
     if ($queryStringsValues[TOMORROW] === 1) {
-        return getTasksByDate($con, $userId, date_create()->modify("+1 day")->format("Y-m-d"));
+        return getTasksByDate($con, $userId, date_create()->modify("+1 day")->format("Y-m-d"), $showCompleteTasks);
     }
 
     if ($queryStringsValues[OVERDUE] === 1) {
@@ -53,5 +55,5 @@ function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues): 
 
     $queryStringsValues[ALL_TASKS] = 1;
 
-    return getTasksAll($con, $userId);
+    return getTasksAll($con, $userId, $showCompleteTasks);
 }

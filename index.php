@@ -32,7 +32,7 @@ $projects = [];
 
 $projects = getProjects($con, $userId);
 
-$tasks = getTasksWrapper($con, $userId, $queryStringsValues);
+$tasks = getTasksWrapper($con, $userId, $queryStringsValues, $showCompleteTasks);
 
 $isProjectExist = in_array($queryStringsValues["project_id"], array_column($projects, "id"));
 
