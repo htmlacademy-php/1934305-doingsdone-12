@@ -129,21 +129,21 @@ function getProjects(mysqli $con, int $userId): array
  */
 function getTasksAll(mysqli $con, int $userId, bool $showCompleteTasks): array
 {
-    $allTasksQuery =
+    $allTasks =
         "SELECT t.id AS task_id, t.name AS task_name, t.end_time
         AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ?";
 
-    $uncompleteTasksQuery =
+    $incompleteTasks =
         "SELECT t.id AS task_id, t.name AS task_name, t.end_time
         AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND t.status = 0";
 
-    $query = ($showCompleteTasks) ? $allTasksQuery : $uncompleteTasksQuery;
+    $query = ($showCompleteTasks) ? $allTasks : $incompleteTasks;
     $result = getUserStmtResult($query, ["user_id" => $userId], $con);
     if (!$result) {
         $error = mysqli_error($con);
@@ -333,9 +333,9 @@ function getTasksByQuery(mysqli $con, int $userId, string $query, bool $showComp
  */
 function isProjectExistsInDB(mysqli $con, string $project, int $userId): bool
 {
-    $sqlQuery = "SELECT id FROM projects WHERE user_id = ? AND name = ?";
+    $query = "SELECT id FROM projects WHERE user_id = ? AND name = ?";
 
-    $stmt = dbGetPrepareStmt($con, $sqlQuery, ["user_id" => $userId, "name" => $project]);
+    $stmt = dbGetPrepareStmt($con, $query, ["user_id" => $userId, "name" => $project]);
 
     mysqli_stmt_execute($stmt);
 
@@ -358,9 +358,9 @@ function isProjectExistsInDB(mysqli $con, string $project, int $userId): bool
  */
 function createNewProject(mysqli $con, array $projectForm): bool
 {
-    $sqlQuery = "INSERT INTO projects (name, user_id) VALUES (?, ?)";
+    $query = "INSERT INTO projects (name, user_id) VALUES (?, ?)";
 
-    $stmt = dbGetPrepareStmt($con, $sqlQuery, [$projectForm["project_name"], $projectForm["user_id"]]);
+    $stmt = dbGetPrepareStmt($con, $query, [$projectForm["project_name"], $projectForm["user_id"]]);
 
     return mysqli_stmt_execute($stmt);
 }
@@ -389,19 +389,28 @@ function updateStatusTask(mysqli $con, int $userId, int $taskId): bool
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
  * @param string $date - дата задач
+ * @param bool $showCompleteTasks - значение для отображения
+ * законченных задач из БД
  * @return array - массив задач
  */
-function getTasksByDate(mysqli $con, int $userId, string $date): array
+function getTasksByDate(mysqli $con, int $userId, string $date, bool $showCompleteTasks): array
 {
-    $selectTasksById =
+    $allTasks =
         "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
        t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND t.end_time = ?";
 
+    $incompleteTasks =
+        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
+       t.status AS is_finished, t.file
+    FROM tasks AS t
+    JOIN projects AS p ON t.project_id = p.id
+    WHERE t.user_id = ? AND t.end_time = ? AND t.status = 0";
 
-    $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "end_time" => $date], $con);
+    $query = ($showCompleteTasks) ? $allTasks : $incompleteTasks;
+    $result = getUserStmtResult($query, ["user_id" => $userId, "end_time" => $date], $con);
     if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
