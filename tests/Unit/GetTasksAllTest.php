@@ -39,14 +39,22 @@ class GetTasksAllTest extends TestCase
         for ($i = 0; $i < 12; $i++) {
             createNewTask(Database::$con, $taskThresholds);
         }
+
+        for ($i = 6; $i <= 12; $i++) {
+            updateStatusTask(Database::$con, $this->userId, $i);
+        }
     }
 
     public function testGetTasksAll()
     {
-        $this->assertEquals([], getTasksAll(Database::$con, 666));
+        $this->assertEquals([], getTasksAll(Database::$con, 666, false));
+        $this->assertEquals([], getTasksAll(Database::$con, 66, true));
 
-        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks.json"), true);
-        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId));
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-all.json"), true);
+        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, true));
+
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-uncomplete.json"), true);
+        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, false));
     }
 
     public function tearDown(): void
