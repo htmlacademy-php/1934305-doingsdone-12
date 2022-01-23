@@ -40,6 +40,10 @@ class GetOverdueTasksTest extends TestCase
             createNewTask(Database::$con, $taskThresholds);
         }
 
+        for ($i = 6; $i <= 12; $i++) {
+            updateStatusTask(Database::$con, $this->userId, $i);
+        }
+
         $taskThresholds = [
             "name" => "task1",
             "project_id" => 1,
@@ -57,7 +61,7 @@ class GetOverdueTasksTest extends TestCase
     {
         $this->assertEquals([], getOverdueTasks(Database::$con, 666, date_create("2021-1-1")->format("Y-m-d")));
 
-        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks.json"), true);
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-overdue.json"), true);
         $this->assertEquals(
             $expected,
             getOverdueTasks(Database::$con, $this->userId, date_create("2021-1-1")->modify("+1 day")->format("Y-m-d"))
