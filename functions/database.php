@@ -159,19 +159,29 @@ function getTasksAll(mysqli $con, int $userId, bool $showCompleteTasks): array
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
  * @param int $projectId - номер айди проекта
+ * @param bool $showCompleteTasks - значение для отображения
+ * законченных задач из БД
  * @return array - массив задач
  */
-function getTasksByProjectId(mysqli $con, int $userId, int $projectId): array
+function getTasksByProjectId(mysqli $con, int $userId, int $projectId, bool $showCompleteTasks): array
 {
-    $selectTasksById =
+    $allTasksById =
         "SELECT t.id AS task_id, t.name AS task_name,
        t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND p.id = ?";
 
+    $incompleteTasksById =
+        "SELECT t.id AS task_id, t.name AS task_name,
+       t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+    FROM tasks AS t
+    JOIN projects AS p ON t.project_id = p.id
+    WHERE t.user_id = ? AND p.id = ? AND t.status = 0";
 
-    $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "project_id" => $projectId], $con);
+    $query = ($showCompleteTasks) ? $allTasksById : $incompleteTasksById;
+
+    $result = getUserStmtResult($query, ["user_id" => $userId, "project_id" => $projectId], $con);
     if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
