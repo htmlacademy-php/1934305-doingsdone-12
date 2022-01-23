@@ -40,24 +40,40 @@ class GetTasksByProjectIdTest extends TestCase
             createNewTask(Database::$con, $taskThresholds);
         }
 
+        for ($i = 4; $i <= 6; $i++) {
+            updateStatusTask(Database::$con, $this->userId, $i);
+        }
+
         $taskThresholds["project_id"] = 2;
 
         for ($i = 0; $i < 6; $i++) {
             createNewTask(Database::$con, $taskThresholds);
         }
+
+        for ($i = 10; $i <= 12; $i++) {
+            updateStatusTask(Database::$con, $this->userId, $i);
+        }
     }
 
     public function testGetTasksByProjectId()
     {
-        $this->assertEquals([], getTasksByProjectId(Database::$con, 666, 2));
+        $this->assertEquals([], getTasksByProjectId(Database::$con, 666, 2, true));
+        $this->assertEquals([], getTasksByProjectId(Database::$con, 666, 2, false));
 
-        $expected1 = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-projects-id-1.json"), true);
-        $this->assertEquals($expected1, getTasksByProjectId(Database::$con, $this->userId, 1));
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-projects-id-1.json"), true);
+        $this->assertEquals($expected, getTasksByProjectId(Database::$con, $this->userId, 1, true));
 
-        $expected2 = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-projects-id-2.json"), true);
-        $this->assertEquals($expected2, getTasksByProjectId(Database::$con, $this->userId, 2));
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/incomplete-tasks-by-projects-id-1.json"), true);
+        $this->assertEquals($expected, getTasksByProjectId(Database::$con, $this->userId, 1, false));
 
-        $this->assertEquals([], getTasksByProjectId(Database::$con, $this->userId, 4));
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-projects-id-2.json"), true);
+        $this->assertEquals($expected, getTasksByProjectId(Database::$con, $this->userId, 2, true));
+
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/incomplete-tasks-by-projects-id-2.json"), true);
+        $this->assertEquals($expected, getTasksByProjectId(Database::$con, $this->userId, 2, false));
+
+        $this->assertEquals([], getTasksByProjectId(Database::$con, $this->userId, 4, true));
+        $this->assertEquals([], getTasksByProjectId(Database::$con, $this->userId, 4, false));
     }
 
     public function tearDown(): void
