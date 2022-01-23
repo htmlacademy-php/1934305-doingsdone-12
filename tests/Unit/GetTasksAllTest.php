@@ -53,7 +53,7 @@ class GetTasksAllTest extends TestCase
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-all.json"), true);
         $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, true));
 
-        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-uncomplete.json"), true);
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-incomplete.json"), true);
         $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, false));
     }
 
