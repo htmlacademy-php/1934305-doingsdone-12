@@ -290,19 +290,29 @@ function getUserCredentials(mysqli $con, string $email): ?array
  * Возвращает массив задач из БД по ключевым словам или null
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
+ * @param bool $showCompleteTasks - значение для отображения
+ * законченных задач из БД
  * @return array|null  - массив задач или null
  */
-function getTasksByQuery(mysqli $con, int $userId, string $query): ?array
+function getTasksByQuery(mysqli $con, int $userId, string $query, bool $showCompleteTasks): ?array
 {
-    $selectTasksByQuery =
+    $allTasks =
         "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date,
        p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
 
+    $incompleteTasks =
+               "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date,
+       p.name AS project, t.status AS is_finished, t.file
+    FROM tasks AS t
+    JOIN projects AS p ON t.project_id = p.id
+    WHERE t.user_id = ? AND t.status = 0 AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
 
-    $result = getUserStmtResult($selectTasksByQuery, ["user_id" => $userId, "query" => trim($query)], $con);
+    $querySql = ($showCompleteTasks) ? $allTasks : $incompleteTasks;
+
+    $result = getUserStmtResult($querySql, ["user_id" => $userId, "query" => trim($query)], $con);
     if (!$result) {
         $error = mysqli_error($con);
         renderError($error);
