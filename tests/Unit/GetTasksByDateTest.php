@@ -40,6 +40,10 @@ class GetTasksByDateTest extends TestCase
             createNewTask(Database::$con, $taskThresholds);
         }
 
+        for ($i = 6; $i <= 12; $i++) {
+            updateStatusTask(Database::$con, $this->userId, $i);
+        }
+
         $taskThresholds = [
             "name" => "task1",
             "project_id" => 1,
@@ -55,20 +59,30 @@ class GetTasksByDateTest extends TestCase
 
     public function testGetTasksByDate()
     {
-        $this->assertEquals([], getTasksByDate(Database::$con, 666, date_create("2021-1-1")->format("Y-m-d")));
+        $this->assertEquals([], getTasksByDate(Database::$con, 666, date_create("2021-1-1")->format("Y-m-d"), true));
 
-        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks.json"), true);
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-all.json"), true);
         $this->assertEquals($expected, getTasksByDate(
             Database::$con,
             $this->userId,
-            date_create("2021-1-1")->format("Y-m-d")
+            date_create("2021-1-1")->format("Y-m-d"),
+            true
         ));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-one-plus-date.json"), true);
         $this->assertEquals($expected, getTasksByDate(
             Database::$con,
             $this->userId,
-            date_create("2021-1-1")->modify("+1 day")->format("Y-m-d")
+            date_create("2021-1-1")->modify("+1 day")->format("Y-m-d"),
+            true
+        ));
+
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-incomplete.json"), true);
+        $this->assertEquals($expected, getTasksByDate(
+            Database::$con,
+            $this->userId,
+            date_create("2021-1-1")->format("Y-m-d"),
+            false
         ));
     }
 
