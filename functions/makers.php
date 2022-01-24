@@ -82,3 +82,29 @@ function makeProjectFormArray(): array
 
     return makeArrayFromFormInput($expectedField);
 }
+
+/**
+ * Создаёт массив из необработанных данных из GET запроса
+ * @return array отфильтрованный массив данных
+ */
+function makeCriteria(array $queryStringValues): array
+{
+    $criteria = [];
+
+    if ($queryStringValues[TOMORROW]) {
+        $criteria["expire"] = TOMORROW;
+    } elseif ($queryStringValues[OVERDUE]) {
+        $criteria["expire"] = OVERDUE;
+    } elseif ($queryStringValues[CURRENT_DAY]) {
+        $criteria["expire"] = CURRENT_DAY;
+    } elseif ($queryStringValues[PROJECT_ID] === 0 && !isset($_GET[QUERY])) {
+        $criteria["expire"] = ALL_TASKS;
+    } else {
+        $criteria["expire"] = null;
+    }
+
+    $criteria[PROJECT_ID] = $queryStringValues[PROJECT_ID];
+    $criteria[TASK_ID] = $queryStringValues[TASK_ID];
+
+    return $criteria;
+}
