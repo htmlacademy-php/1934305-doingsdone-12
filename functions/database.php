@@ -60,14 +60,16 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data): mysqli_stmt
  * @param string $sqlQuery - подготовленная строка SQL запроса
  * @param array $params - параметры запроса
  * @param @con - информация для соединения с БД
- * @return mysqli_result - результат подготовленного выражения
+ * @return mysqli_result|null - результат подготовленного выражения
  */
-function getUserStmtResult(string $sqlQuery, array $params, $con): mysqli_result
+function getUserStmtResult(string $sqlQuery, array $params, $con): ?mysqli_result
 {
     $preparedStatement = dbGetPrepareStmt($con, $sqlQuery, $params);
     mysqli_stmt_execute($preparedStatement);
 
-    return mysqli_stmt_get_result($preparedStatement);
+    $result = mysqli_stmt_get_result($preparedStatement);
+
+    return (!$result) ? null : $result;
 }
 
 /**
