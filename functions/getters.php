@@ -15,7 +15,6 @@ function getQueriesWrapper(): array
     $queries[CURRENT_DAY] = (int)filter_input(INPUT_GET, "current_day", FILTER_SANITIZE_NUMBER_INT);
     $queries[TOMORROW] = (int)filter_input(INPUT_GET, "tomorrow", FILTER_SANITIZE_NUMBER_INT);
     $queries[OVERDUE] = (int)filter_input(INPUT_GET, "overdue", FILTER_SANITIZE_NUMBER_INT);
-    $queries[QUERY] = filter_input(INPUT_GET, "query", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     return $queries;
 }
@@ -24,16 +23,16 @@ function getQueriesWrapper(): array
  * Обёртка над всеми запросами задач в базу
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - идентификатор пользователя
- * @param array $queryStringsValues - ассоциативный массив
+ * @param array $criteria - ассоциативный массив
  * со значениями из GET - запросов
  * @param bool $showCompleteTasks - значение для отображения
  * законченных задач из БД
  * @return array|null - массив задач
  */
-function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues, bool $showCompleteTasks): ?array
+function getTasksWrapper(mysqli $con, int $userId, array $criteria, bool $showCompleteTasks): ?array
 {
-    if ($queryStringsValues[PROJECT_ID]) {
-        return getTasksByProjectId($con, $userId, $queryStringsValues[PROJECT_ID], $showCompleteTasks);
+    if ($criteria[PROJECT_ID]) {
+        return getTasksByProjectId($con, $userId, $criteria[PROJECT_ID], $showCompleteTasks);
     }
 
     if (isset($_GET[QUERY])) {
@@ -41,19 +40,17 @@ function getTasksWrapper(mysqli $con, int $userId, array &$queryStringsValues, b
         return getTasksByQuery($con, $userId, $query, $showCompleteTasks);
     }
 
-    if ($queryStringsValues[CURRENT_DAY] === 1) {
+    if ($criteria["expire"] === CURRENT_DAY) {
         return getTasksByDate($con, $userId, date_create()->format("Y-m-d"), $showCompleteTasks);
     }
 
-    if ($queryStringsValues[TOMORROW] === 1) {
+    if ($criteria["expire"] === TOMORROW) {
         return getTasksByDate($con, $userId, date_create()->modify("+1 day")->format("Y-m-d"), $showCompleteTasks);
     }
 
-    if ($queryStringsValues[OVERDUE] === 1) {
+    if ($criteria["expire"] === OVERDUE) {
         return getOverdueTasks($con, $userId, date_create()->format("Y-m-d"));
     }
-
-    $queryStringsValues[ALL_TASKS] = 1;
 
     return getTasksAll($con, $userId, $showCompleteTasks);
 }
