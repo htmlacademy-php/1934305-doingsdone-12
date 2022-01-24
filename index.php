@@ -23,20 +23,21 @@ saveCompleteTasksToSession();
 $showCompleteTasks = (int) $_SESSION["show_complete_tasks"];
 
 $queryStringsValues = getQueriesWrapper();
+$criteria = makeCriteria($queryStringsValues);
 
-if ($queryStringsValues["task_id"]) {
-    updateStatusTask($con, $userId, $queryStringsValues["task_id"]);
+if ($criteria[TASK_ID]) {
+    updateStatusTask($con, $userId, $criteria[TASK_ID]);
 }
 
 $projects = [];
 
 $projects = getProjects($con, $userId);
 
-$tasks = getTasksWrapper($con, $userId, $queryStringsValues, $showCompleteTasks);
+$tasks = getTasksWrapper($con, $userId, $criteria, $showCompleteTasks);
 
-$isProjectExist = in_array($queryStringsValues["project_id"], array_column($projects, "id"));
+$isProjectExist = in_array($criteria[PROJECT_ID], array_column($projects, "id"));
 
-if ($queryStringsValues["project_id"] && $isProjectExist === false) {
+if ($criteria[PROJECT_ID] && $isProjectExist === false) {
     http_response_code(404);
     exit();
 }
@@ -44,7 +45,7 @@ if ($queryStringsValues["project_id"] && $isProjectExist === false) {
 $projectsSideTemplate = includeTemplate("projects-side.php", [
     "projects" => $projects,
     "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
-    "projectId" => $queryStringsValues["project_id"]
+    "projectId" => $criteria[PROJECT_ID]
 ]);
 
 $pageContent = includeTemplate("main.php", [
@@ -52,7 +53,7 @@ $pageContent = includeTemplate("main.php", [
     "tasks" => $tasks,
     "showCompleteTasks" => $showCompleteTasks,
     "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
-    "btnActive" => $queryStringsValues
+    "btnActive" => $criteria["expire"]
 ]);
 
 $layoutContent = includeTemplate("layout.php", [

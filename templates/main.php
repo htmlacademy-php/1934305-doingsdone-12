@@ -20,26 +20,26 @@
             <nav class="tasks-switch">
                 <a href="/" class="tasks-switch__item
                 <?php
-                if ($btnActive["all_tasks"] ?? null) : ?>
+                if ($btnActive === ALL_TASKS) : ?>
                 tasks-switch__item--active
                     <?php
                 endif; ?>">
                     Все задачи</a>
                 <a href="<?= makeURL($scriptName, ["current_day" => 1]) ?>" class="tasks-switch__item
             <?php
-            if ($btnActive["current_day"] ?? null) : ?>
+            if ($btnActive === CURRENT_DAY) : ?>
                 tasks-switch__item--active
                 <?php
             endif; ?>">Повестка дня</a>
                 <a href="<?= makeURL($scriptName, ["tomorrow" => 1]) ?>" class="tasks-switch__item
  <?php
-    if ($btnActive["tomorrow"] ?? null) : ?>
+    if ($btnActive === TOMORROW) : ?>
                 tasks-switch__item--active
                 <?php
     endif; ?>">Завтра</a>
                 <a href="<?= makeURL($scriptName, ["overdue" => 1]) ?>" class="tasks-switch__item
 <?php
-if ($btnActive["overdue"] ?? null) : ?>
+if ($btnActive === OVERDUE) : ?>
                 tasks-switch__item--active
                 <?php
 endif; ?>
