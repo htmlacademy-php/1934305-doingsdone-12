@@ -11,3 +11,4 @@ uploads/*
 !uploads/.gitkeep
 config.php
 config-test.php
+.php-cs-fixer.cache

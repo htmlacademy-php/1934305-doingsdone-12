@@ -9,6 +9,8 @@ if ($checkbox.length) {
     var searchParams = new URLSearchParams(window.location.search);
     searchParams.set('show_completed', is_checked);
 
+    searchParams.delete('task_id');
+    searchParams.delete('check');
     window.location = '/index.php?' + searchParams.toString();
   });
 }

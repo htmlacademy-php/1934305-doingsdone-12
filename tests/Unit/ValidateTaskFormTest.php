@@ -21,7 +21,8 @@ class ValidateTaskFormTest extends TestCase
 
         $expected = [
             "name" => "Поле название надо заполнить",
-            "end_time" => "Выбранная дата должна быть больше или равна текущей"
+            "end_time" =>
+                "Выбранная дата должна быть больше или равна текущей"
         ];
         $onlySpacesWord = "    ";
         $testTaskFormData = ["project_id" => 1, "name" => $onlySpacesWord, "end_time" => "2021-10-10"];

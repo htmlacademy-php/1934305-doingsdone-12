@@ -14,34 +14,22 @@ if (!isset($_SESSION["user"])) {
 
 $projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
 $projects = getProjects($con, $userId);
-$projectsId = array_column($projects, "id");
 
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $taskForm = makeTaskFormArray();
-    $taskForm["user_id"] = $userId;
+    $projectForm = makeProjectFormArray();
+    $projectForm["user_id"] = $userId;
 
-    $errors = validateTaskForm($taskForm, $projectsId, date_create()->format("Y-m-d"));
-
-    if (!empty($_FILES["file"]["name"]) && empty($errors)) {
-        $pathFile = saveFile();
-
-        if ($pathFile === null) {
-            $errors["file"] = "Ошибка загрузки файла";
-        } else {
-            $taskForm["file"] = $pathFile;
-        }
-    }
+    $errors = validateProjectForm($projectForm, $con);
 
     if (empty($errors)) {
-        $res = createNewTask($con, $taskForm);
+        $res = createNewProject($con, $projectForm);
 
         if ($res) {
             header("Location: index.php");
         } else {
             $mysqliError = mysqli_error($con);
             renderError($mysqliError);
-            unlink($taskForm["file"]);
         }
         exit();
     }
@@ -53,9 +41,8 @@ $projectsSideTemplate = includeTemplate("projects-side.php", [
     "projectId" => $projectId
 ]);
 
-$pageContent = includeTemplate("form-task.php", [
+$pageContent = includeTemplate("form-project.php", [
     "projectsSideTemplate" => $projectsSideTemplate,
-    "projects" => $projects,
     "errors" => $errors
 ]);
 

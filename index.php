@@ -1,4 +1,5 @@
 <?php
+
 /* @var mysqli $con
  * @var string $title
  * @var int $userId
@@ -7,7 +8,6 @@
 require_once "init.php";
 
 if (!isset($_SESSION["user"])) {
-
     $pageContent = includeTemplate("guest.php");
 
     $layoutContent = includeTemplate("layout.php", [
@@ -19,26 +19,25 @@ if (!isset($_SESSION["user"])) {
     exit();
 }
 
-$showCompleteTasks = 1;
+saveCompleteTasksToSession();
+$showCompleteTasks = (int) $_SESSION["show_complete_tasks"];
 
-$projectId = filter_input(INPUT_GET, "project_id", FILTER_SANITIZE_NUMBER_INT);
+$queryStringsValues = getQueriesWrapper();
+$criteria = makeCriteria($queryStringsValues);
+
+if ($criteria[TASK_ID]) {
+    updateStatusTask($con, $userId, $criteria[TASK_ID]);
+}
 
 $projects = [];
 
 $projects = getProjects($con, $userId);
 
-if ($projectId) {
-    $tasks = getTasksByProjectId($con, $userId, $projectId);
-} elseif (isset($_GET["query"])) {
-    $query = filter_input(INPUT_GET, "query", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $tasks = getTasksByQuery($con, $userId, $query);
-} else {
-    $tasks = getTasksAll($con, $userId);
-}
+$tasks = getTasksWrapper($con, $userId, $criteria, $showCompleteTasks);
 
-$isProjectExist = in_array($projectId, array_column($projects, "id"));
+$isProjectExist = in_array($criteria[PROJECT_ID], array_column($projects, "id"));
 
-if ($projectId !== null && $isProjectExist === false) {
+if ($criteria[PROJECT_ID] && $isProjectExist === false) {
     http_response_code(404);
     exit();
 }
@@ -46,13 +45,15 @@ if ($projectId !== null && $isProjectExist === false) {
 $projectsSideTemplate = includeTemplate("projects-side.php", [
     "projects" => $projects,
     "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
-    "projectId" => $projectId
+    "projectId" => $criteria[PROJECT_ID]
 ]);
 
 $pageContent = includeTemplate("main.php", [
     "projectsSideTemplate" => $projectsSideTemplate,
     "tasks" => $tasks,
     "showCompleteTasks" => $showCompleteTasks,
+    "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
+    "btnActive" => $criteria["expire"]
 ]);
 
 $layoutContent = includeTemplate("layout.php", [

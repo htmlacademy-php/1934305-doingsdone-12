@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Database;
 use PHPUnit\Framework\TestCase;
 
-class GetTasksAllTest extends TestCase
+class UpdateStatusTaskTest extends TestCase
 {
     private int $userId;
 
@@ -39,22 +39,13 @@ class GetTasksAllTest extends TestCase
         for ($i = 0; $i < 12; $i++) {
             createNewTask(Database::$con, $taskThresholds);
         }
-
-        for ($i = 6; $i <= 12; $i++) {
-            updateStatusTask(Database::$con, $this->userId, $i);
-        }
     }
 
-    public function testGetTasksAll()
+    public function testUpdateStatusTask()
     {
-        $this->assertEquals([], getTasksAll(Database::$con, 666, false));
-        $this->assertEquals([], getTasksAll(Database::$con, 66, true));
-
-        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-all.json"), true);
-        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, true));
-
-        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-incomplete.json"), true);
-        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, false));
+        $this->assertEquals(true, updateStatusTask(Database::$con, $this->userId, 3));
+        $this->assertEquals(false, updateStatusTask(Database::$con, $this->userId, 15));
+        $this->assertEquals(false, updateStatusTask(Database::$con, 3, 4));
     }
 
     public function tearDown(): void

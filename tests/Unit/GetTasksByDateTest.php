@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Database;
 use PHPUnit\Framework\TestCase;
 
-class GetTasksAllTest extends TestCase
+class GetTasksByDateTest extends TestCase
 {
     private int $userId;
 
@@ -43,18 +43,47 @@ class GetTasksAllTest extends TestCase
         for ($i = 6; $i <= 12; $i++) {
             updateStatusTask(Database::$con, $this->userId, $i);
         }
+
+        $taskThresholds = [
+            "name" => "task1",
+            "project_id" => 1,
+            "end_time" => "2021-1-2",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+
+        for ($i = 0; $i < 3; $i++) {
+            createNewTask(Database::$con, $taskThresholds);
+        }
     }
 
-    public function testGetTasksAll()
+    public function testGetTasksByDate()
     {
-        $this->assertEquals([], getTasksAll(Database::$con, 666, false));
-        $this->assertEquals([], getTasksAll(Database::$con, 66, true));
+        $this->assertEquals([], getTasksByDate(Database::$con, 666, date_create("2021-1-1")->format("Y-m-d"), true));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-all.json"), true);
-        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, true));
+        $this->assertEquals($expected, getTasksByDate(
+            Database::$con,
+            $this->userId,
+            date_create("2021-1-1")->format("Y-m-d"),
+            true
+        ));
+
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-one-plus-date.json"), true);
+        $this->assertEquals($expected, getTasksByDate(
+            Database::$con,
+            $this->userId,
+            date_create("2021-1-1")->modify("+1 day")->format("Y-m-d"),
+            true
+        ));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-incomplete.json"), true);
-        $this->assertEquals($expected, getTasksAll(Database::$con, $this->userId, false));
+        $this->assertEquals($expected, getTasksByDate(
+            Database::$con,
+            $this->userId,
+            date_create("2021-1-1")->format("Y-m-d"),
+            false
+        ));
     }
 
     public function tearDown(): void

@@ -28,31 +28,64 @@ class GetTasksByQueryTest extends TestCase
                             (\"Авто\", {$this->userId});"
         );
 
-        $task1 = ["name" => "Поесть пиццу", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $task2 = ["name" => "Поесть кальмаров", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $task3 = ["name" => "Погулять в деревне", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
-        $task4 = ["name" => "Погулять по городу", "project_id" => 1, "end_time" => "2021-1-1", "user_id" => $this->userId, "file" => ""];
+        $task1 = [
+            "name" => "Поесть пиццу",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $task2 = [
+            "name" => "Поесть кальмаров",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $task3 = [
+            "name" => "Погулять в деревне",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
+        $task4 = [
+            "name" => "Погулять по городу",
+            "project_id" => 1,
+            "end_time" => "2021-1-1",
+            "user_id" => $this->userId,
+            "file" => ""
+        ];
         createNewTask(Database::$con, $task1);
         createNewTask(Database::$con, $task2);
         createNewTask(Database::$con, $task3);
         createNewTask(Database::$con, $task4);
+
+        updateStatusTask(Database::$con, $this->userId, 1);
+        updateStatusTask(Database::$con, $this->userId, 4);
     }
 
     public function testGetTasksByQueryTest()
     {
-        $this->assertEquals(null, getTasksByQuery(Database::$con, $this->userId, "поехать"));
+        $this->assertEquals(null, getTasksByQuery(Database::$con, $this->userId, "поехать", 1));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-query-1.json"), true);
-        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "Поесть"));
+        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "Поесть", 1));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-query-2.json"), true);
-        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "Погулять"));
+        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "Погулять", 1));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-query-1.json"), true);
-        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "поесть"));
+        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "поесть", 1));
 
         $expected = json_decode(file_get_contents(__DIR__ . "/../data/tasks-by-query-2.json"), true);
-        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "погулять"));
+        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "погулять", 1));
+
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/incomplete-tasks-by-query-1.json"), true);
+        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "поесть", false));
+
+        $expected = json_decode(file_get_contents(__DIR__ . "/../data/incomplete-tasks-by-query-2.json"), true);
+        $this->assertEquals($expected, getTasksByQuery(Database::$con, $this->userId, "погулять", false));
     }
 
     public function tearDown(): void
@@ -65,5 +98,4 @@ class GetTasksByQueryTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

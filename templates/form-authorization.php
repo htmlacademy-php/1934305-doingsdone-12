@@ -1,7 +1,8 @@
 <div class="content">
 
     <section class="content__side">
-        <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+        <p class="content__side-info">Если у вас уже есть аккаунт,
+            авторизуйтесь на сайте</p>
 
         <a class="button button--transparent content__side-button" href="<?= makeURL(AUTH_SCRIPT, []) ?>">Войти</a>
     </section>
@@ -22,7 +23,7 @@
                 <?php
                 if (isset($errors["email"])) : ?>
                     <p class="form__message"> <?= $errors["email"] ?></p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
@@ -36,7 +37,7 @@
                 <?php
                 if (isset($errors["password"])) : ?>
                     <p class="form__message"> <?= $errors["password"] ?></p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 

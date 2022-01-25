@@ -20,7 +20,7 @@
                 <?php
                 if (isset($errors["name"])) : ?>
                     <p class="form__message"> <?= $errors["name"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
@@ -32,13 +32,13 @@
                     <?php
                     foreach ($projects as $project) : ?>
                         <option value="<?= $project["id"] ?>"><?= $project["name"] ?></option>
-                    <?php
+                        <?php
                     endforeach; ?>
                 </select>
                 <?php
                 if (isset($errors["project_id"])) : ?>
                     <p class="form__message"> <?= $errors["project_id"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
@@ -52,7 +52,7 @@
                 <?php
                 if (isset($errors["end_time"])) : ?>
                     <p class="form__message"> <?= $errors["end_time"] ?> </p>
-                <?php
+                    <?php
                 endif ?>
             </div>
 
