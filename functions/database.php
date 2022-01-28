@@ -448,3 +448,29 @@ function getOverdueTasks(mysqli $con, int $userId, string $date): array
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+
+/**
+ * Возвращает массив невыполненных задач,
+ * имена пользователей на сегодня из БД
+ * @param mysqli $con - объект подключения к БД
+ * @param string $date - дата задач
+ * законченных задач из БД
+ * @return array - массив задач
+ */
+function getUsersTasksByDate(mysqli $con, string $date): array
+{
+    $query =
+        "SELECT u.id, u.name AS user_name, u.email, GROUP_CONCAT(t.name SEPARATOR ', ') AS tasks_names
+            FROM users AS u JOIN tasks as t ON t.user_id = u.id
+                    WHERE t.status = 0 AND t.end_time = ?
+            GROUP BY u.id, u.name, u.email";
+    $result = getUserStmtResult($query, ["end_time" => $date], $con);
+    if (!$result) {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
