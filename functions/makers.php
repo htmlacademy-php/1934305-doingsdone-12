@@ -124,3 +124,25 @@ function makeDsn(array $mailer): string
         . $mailer["encryption"]
         . "&auth_mode=login";
 }
+
+/**
+ * Возвращает результат работы подготовленного
+ * выражения для дальнейшей обраотки данных пользователя
+ * @param array $db - ассоциативный массив
+ * с конфигом для подключения к базе данных
+ * @return mysqli - объект подключения к БД
+ */
+function makeConnection(array $db): mysqli
+{
+    $con = mysqli_connect($db["host"], $db["user"], $db["password"], $db["database"]);
+
+    if ($con === false) {
+        $error = mysqli_connect_error();
+        renderError($error);
+        exit();
+    }
+
+    mysqli_set_charset($con, "utf8");
+
+    return $con;
+}

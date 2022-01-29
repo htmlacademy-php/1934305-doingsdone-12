@@ -73,28 +73,6 @@ function getUserStmtResult(string $sqlQuery, array $params, $con): ?mysqli_resul
 }
 
 /**
- * Возвращает результат работы подготовленного
- * выражения для дальнейшей обраотки данных пользователя
- * @param array $db - ассоциативный массив
- * с конфигом для подключения к базе данных
- * @return mysqli - объект подключения к БД
- */
-function makeConnection(array $db): mysqli
-{
-    $con = mysqli_connect($db["host"], $db["user"], $db["password"], $db["database"]);
-
-    if ($con === false) {
-        $error = mysqli_connect_error();
-        renderError($error);
-        exit();
-    }
-
-    mysqli_set_charset($con, "utf8");
-
-    return $con;
-}
-
-/**
  * Возвращает массив всех проектов из БД
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
