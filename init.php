@@ -28,6 +28,8 @@ require_once "functions/makers.php";
 require_once "functions/file.php";
 
 $con = makeConnection($config["db"]);
+$dsn = makeDsn($config["mailer"]);
+
 $title = "Дела в порядке";
 $userId = 0;
 
