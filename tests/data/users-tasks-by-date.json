@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "user_name": "\u0412\u0430\u0441\u044f",
+    "email": "ddd@mail.ru",
+    "tasks_names": "task1, task1, task1, task1, task1, task1"
+  },
+  {
+    "id": 2,
+    "user_name": "\u041f\u0435\u0442\u044f",
+    "email": "ddd1@mail.ru",
+    "tasks_names": "task1, task1, task1, task1, task1, task1"
+  },
+  {
+    "id": 3,
+    "user_name": "\u0421\u0430\u0448\u0430",
+    "email": "ddd3@mail.ru",
+    "tasks_names": "task1, task1, task1, task1, task1, task1"
+  },
+  {
+    "id": 4,
+    "user_name": "\u0421\u0430\u0448\u0430",
+    "email": "ddd4@mail.ru",
+    "tasks_names": "task1, task1, task1, task1, task1, task1"
+  }
+]
