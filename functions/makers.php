@@ -108,3 +108,19 @@ function makeCriteria(array $queryStringValues): array
 
     return $criteria;
 }
+
+/**
+ * Формирует строку для соединения с почтовым сервером
+ * @param array $mailer - параметры для логина с почтовым сервером
+ * @return string - строка для логина к почтовому серверу
+ */
+function makeDsn(array $mailer): string
+{
+    return "smtp://" . $mailer["username"]
+        . ":" . $mailer["password"]
+        . "@" . $mailer["host"] . ":"
+        . $mailer["port"]
+        . "?encryption="
+        . $mailer["encryption"]
+        . "&auth_mode=login";
+}
