@@ -73,28 +73,6 @@ function getUserStmtResult(string $sqlQuery, array $params, $con): ?mysqli_resul
 }
 
 /**
- * Возвращает результат работы подготовленного
- * выражения для дальнейшей обраотки данных пользователя
- * @param array $db - ассоциативный массив
- * с конфигом для подключения к базе данных
- * @return mysqli - объект подключения к БД
- */
-function makeConnection(array $db): mysqli
-{
-    $con = mysqli_connect($db["host"], $db["user"], $db["password"], $db["database"]);
-
-    if ($con === false) {
-        $error = mysqli_connect_error();
-        renderError($error);
-        exit();
-    }
-
-    mysqli_set_charset($con, "utf8");
-
-    return $con;
-}
-
-/**
  * Возвращает массив всех проектов из БД
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
@@ -440,6 +418,32 @@ function getOverdueTasks(mysqli $con, int $userId, string $date): array
 
 
     $result = getUserStmtResult($selectTasksById, ["user_id" => $userId, "end_time" => $date], $con);
+    if (!$result) {
+        $error = mysqli_error($con);
+        renderError($error);
+        exit();
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+
+/**
+ * Возвращает массив невыполненных задач,
+ * имена пользователей на сегодня из БД
+ * @param mysqli $con - объект подключения к БД
+ * @param string $date - дата задач
+ * законченных задач из БД
+ * @return array - массив задач
+ */
+function getUsersTasksByDate(mysqli $con, string $date): array
+{
+    $query =
+        "SELECT u.id, u.name AS user_name, u.email, GROUP_CONCAT(t.name SEPARATOR ', ') AS tasks_names
+            FROM users AS u JOIN tasks as t ON t.user_id = u.id
+                    WHERE t.status = 0 AND t.end_time = ?
+            GROUP BY u.id, u.name, u.email";
+    $result = getUserStmtResult($query, ["end_time" => $date], $con);
     if (!$result) {
         $error = mysqli_error($con);
         renderError($error);

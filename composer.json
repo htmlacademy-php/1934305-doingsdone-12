@@ -20,7 +20,8 @@
   },
   "require": {
     "ext-mysqli": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "symfony/mailer": "^6.0"
   },
   "scripts": {
     "test": "./vendor/bin/phpunit tests --colors --bootstrap=init-test.php"
