@@ -57,7 +57,10 @@ endif; ?>
         </div>
         <table class="tasks">
             <?php
-            if ($tasks === null) : ?>
+            if (isset($errors[QUERY])) : ?>
+                <p><?= $errors[QUERY] ?></p>
+                <?php
+            elseif ($tasks === null) : ?>
                 <p>Ничего не найдено по вашему запросу</p>
                 <?php
             else : ?>

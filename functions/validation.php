@@ -286,3 +286,19 @@ function validateProjectForm(array $projectForm, mysqli $con): array
 
     return array_filter($errors);
 }
+
+/**
+ * Проверяет данные поиска на пустую строку
+ * @param string query - строка запроса
+ * @return array массив ошибок
+ */
+function validateSearchQueryForm(string $query): array
+{
+    $errors = [];
+
+    if (trim($query) == "") {
+        $errors[QUERY] = "Не введен поисковой запрос";
+    }
+
+    return $errors;
+}

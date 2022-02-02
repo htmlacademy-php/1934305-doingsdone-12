@@ -29,13 +29,13 @@ function getQueriesWrapper(): array
  * законченных задач из БД
  * @return array|null - массив задач
  */
-function getTasksWrapper(mysqli $con, int $userId, array $criteria, bool $showCompleteTasks): ?array
+function getTasksWrapper(mysqli $con, int $userId, array $criteria, bool $showCompleteTasks, array $errors): ?array
 {
     if ($criteria[PROJECT_ID]) {
         return getTasksByProjectId($con, $userId, $criteria[PROJECT_ID], $showCompleteTasks);
     }
 
-    if (isset($_GET[QUERY])) {
+    if (!isset($errors[QUERY]) && isset($_GET[QUERY])) {
         $query = filter_input(INPUT_GET, QUERY, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         return getTasksByQuery($con, $userId, $query, $showCompleteTasks);
     }
