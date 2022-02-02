@@ -13,6 +13,7 @@ if (!isset($_SESSION["user"])) {
     $layoutContent = includeTemplate("layout.php", [
         "content" => $pageContent,
         "title" => $title,
+        "bodyBackground" => "body-background"
     ]);
 
     print($layoutContent);
