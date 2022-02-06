@@ -44,5 +44,4 @@ class IsProjectExistsInDBTest extends TestCase
         mysqli_query(Database::$con, "TRUNCATE tasks");
         mysqli_query(Database::$con, "SET foreign_key_checks = 1");
     }
-
 }

@@ -42,18 +42,12 @@ class ValidateRegisterFormTest extends TestCase
         $testRegisterForm = ["email" => $emptyEmail, "password" => $emptyPassword, "name" => $emptyUserName];
         $this->assertEquals($expected, validateRegisterForm($testRegisterForm, Database::$con));
 
-        $emptyUserName = "    ";
         $wrongEmail = Text::lexify(str_repeat("?", 10));
         $wrongPassword = Text::lexify(str_repeat("?", 5)) . "  " . Text::lexify(str_repeat("?", 6));
-        $expected = [
-            "email" => "E-mail введён некорректно",
-            "password" => "Пароль не должен содержать пробельные символы",
-            "name" => "Введите имя пользователя"
-        ];
+
         $testRegisterForm = ["email" => $wrongEmail, "password" => $wrongPassword, "name" => $emptyUserName];
         $this->assertEquals($expected, validateRegisterForm($testRegisterForm, Database::$con));
 
-        $emptyUserName = "    ";
         $usedEmail = "d_ivanov@mail.ru";
         $wrongPassword = Text::lexify(str_repeat("?", 5)) . "  " . Text::lexify(str_repeat("?", 6));
         $expected = [

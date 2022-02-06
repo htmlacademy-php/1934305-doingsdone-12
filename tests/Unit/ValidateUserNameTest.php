@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use Faker\Provider\ru_RU\Text;
 use PHPUnit\Framework\TestCase;
 
-
 class ValidateUserNameTest extends TestCase
 {
     public function testValidateUserName()
@@ -18,4 +17,3 @@ class ValidateUserNameTest extends TestCase
         $this->assertEquals(null, validateUserName("Ivan"));
     }
 }
-
