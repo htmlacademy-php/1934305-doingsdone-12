@@ -161,7 +161,7 @@ function validateTaskForm(array $taskForm, array $projectsId, string $curDate): 
 }
 
 /**
- * Проверяет на корректность введёный email
+ * Проверяет на корректность введённый email
  * адрес из формы специфичной только для регистрации
  * @param string $email -- введённый email адрес пользователем
  * @param bool $isEmailInDB -- результат проверки на занятность email адреса

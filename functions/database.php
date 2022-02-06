@@ -135,7 +135,7 @@ function getTasksAll(mysqli $con, int $userId, bool $showCompleteTasks): array
 }
 
 /**
- * Возвращает массив задач из БД соотвествующего $projectId
+ * Возвращает массив задач из БД соответствующего $projectId
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
  * @param int $projectId - номер айди проекта
