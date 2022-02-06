@@ -9,6 +9,10 @@ require_once "functions/database.php";
 require_once "functions/validation.php";
 require_once "functions/templates.php";
 require_once "functions/misc.php";
+require_once "functions/file.php";
+require_once "functions/getters.php";
+require_once "functions/makers.php";
+
 
 Database::$con = makeConnection($config["db"]);
 $title = "Дела в порядке";
