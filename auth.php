@@ -13,15 +13,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($errors)) {
         $user = getUserCredentials($con, $authForm["email"]);
         if ($user !== null) {
-            $errors["password"] = createUserSession($authForm["password"], $user);
+            $errors["password"] = checkPasswordValidity($authForm["password"], $user);
+            if ($errors["password"] === null) {
+                $_SESSION["user"] = $user;
+            }
         } else {
             $errors["email"] = "Такой пользователь не найден";
         }
-    }
-
-    if (empty($errors)) {
-        header("Location: /index.php");
-        exit();
     }
 }
 
