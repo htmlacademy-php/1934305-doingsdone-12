@@ -302,3 +302,19 @@ function validateSearchQueryForm(string $query): array
 
     return $errors;
 }
+
+/**
+ * Валидирует юзера по данным входа.
+ * @param string $formPassword - пароль из формы
+ * @param array $user - ассоциативный массив пользователя из БД
+ * @return string|null - строку с описание ошибки
+ * или null если пароль верифицирован
+ */
+function checkPasswordValidity(string $formPassword, array $user): ?string
+{
+    if (password_verify($formPassword, $user["password"])) {
+        return null;
+    }
+
+    return "Неверный пароль";
+}
