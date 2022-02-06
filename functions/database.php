@@ -110,14 +110,14 @@ function getProjects(mysqli $con, int $userId): array
 function getTasksAll(mysqli $con, int $userId, bool $showCompleteTasks): array
 {
     $allTasks =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time
+        "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y')
         AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ?";
 
     $incompleteTasks =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time
+        "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y')
         AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
@@ -135,7 +135,7 @@ function getTasksAll(mysqli $con, int $userId, bool $showCompleteTasks): array
 }
 
 /**
- * Возвращает массив задач из БД соотвествующего $projectId
+ * Возвращает массив задач из БД соответствующего $projectId
  * @param mysqli $con - объект подключения к БД
  * @param int $userId - номер айди пользователя
  * @param int $projectId - номер айди проекта
@@ -147,14 +147,14 @@ function getTasksByProjectId(mysqli $con, int $userId, int $projectId, bool $sho
 {
     $allTasksById =
         "SELECT t.id AS task_id, t.name AS task_name,
-       t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+       DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND p.id = ?";
 
     $incompleteTasksById =
         "SELECT t.id AS task_id, t.name AS task_name,
-       t.end_time AS date, p.name AS project, t.status AS is_finished, t.file
+        DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date, p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND p.id = ? AND t.status = 0";
@@ -277,14 +277,14 @@ function getUserCredentials(mysqli $con, string $email): ?array
 function getTasksByQuery(mysqli $con, int $userId, string $query, bool $showCompleteTasks): ?array
 {
     $allTasks =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date,
+        "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date,
        p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND MATCH(t.name) AGAINST(? IN BOOLEAN MODE)";
 
     $incompleteTasks =
-               "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date,
+               "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date,
        p.name AS project, t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
@@ -376,14 +376,14 @@ function updateStatusTask(mysqli $con, int $userId, int $taskId): bool
 function getTasksByDate(mysqli $con, int $userId, string $date, bool $showCompleteTasks): array
 {
     $allTasks =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
+        "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date, p.name AS project,
        t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
     WHERE t.user_id = ? AND t.end_time = ?";
 
     $incompleteTasks =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
+        "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date, p.name AS project,
        t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
@@ -410,7 +410,7 @@ function getTasksByDate(mysqli $con, int $userId, string $date, bool $showComple
 function getOverdueTasks(mysqli $con, int $userId, string $date): array
 {
     $selectTasksById =
-        "SELECT t.id AS task_id, t.name AS task_name, t.end_time AS date, p.name AS project,
+        "SELECT t.id AS task_id, t.name AS task_name, DATE_FORMAT(t.end_time, '%d.%m.%Y') AS date, p.name AS project,
        t.status AS is_finished, t.file
     FROM tasks AS t
     JOIN projects AS p ON t.project_id = p.id
@@ -439,10 +439,11 @@ function getOverdueTasks(mysqli $con, int $userId, string $date): array
 function getUsersTasksByDate(mysqli $con, string $date): array
 {
     $query =
-        "SELECT u.id, u.name AS user_name, u.email, GROUP_CONCAT(t.name SEPARATOR ', ') AS tasks_names
+        "SELECT u.id, u.name AS user_name, u.email, GROUP_CONCAT(t.name SEPARATOR ', ') AS tasks_names,
+            DATE_FORMAT(t.end_time, '%d.%m.%Y') as date
             FROM users AS u JOIN tasks as t ON t.user_id = u.id
                     WHERE t.status = 0 AND t.end_time = ?
-            GROUP BY u.id, u.name, u.email";
+            GROUP BY u.id, u.name, u.email, t.end_time";
     $result = getUserStmtResult($query, ["end_time" => $date], $con);
     if (!$result) {
         $error = mysqli_error($con);

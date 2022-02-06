@@ -79,6 +79,27 @@ function validateTaskName(string $value): ?string
 }
 
 /**
+ * Проверяет строку в имени проекта на пустоту.
+ * Возвращает сообщение об ошибке или null
+ * @param string $value строка из формы
+ * @return string|null сообщение об ошибке или null
+ */
+function validateProjectName(string $value): ?string
+{
+    $valueLen = mb_strlen(trim($value));
+
+    if ($valueLen == 0) {
+        return "Поле название надо заполнить";
+    }
+
+    if ($valueLen > 255) {
+        return "Название не должно превышать размер в 255 символов";
+    }
+
+    return null;
+}
+
+/**
  * Проверяет является ли выбранное
  * имя проекта существующим для этого пользователя.
  * Возвращает сообщение об ошибке или null
@@ -140,7 +161,7 @@ function validateTaskForm(array $taskForm, array $projectsId, string $curDate): 
 }
 
 /**
- * Проверяет на корректность введёный email
+ * Проверяет на корректность введённый email
  * адрес из формы специфичной только для регистрации
  * @param string $email -- введённый email адрес пользователем
  * @param bool $isEmailInDB -- результат проверки на занятность email адреса
@@ -276,13 +297,47 @@ function validateAuthForm(array $authForm, mysqli $con): array
  */
 function validateProjectForm(array $projectForm, mysqli $con): array
 {
-    $isProjectInDB = isProjectExistsInDB($con, $projectForm["project_name"], $projectForm["user_id"]);
     $errors = [];
 
-    if ($isProjectInDB === true) {
+    $errors["project_name"] = validateProjectName($projectForm["project_name"]);
+    $isProjectInDB = isProjectExistsInDB($con, $projectForm["project_name"], $projectForm["user_id"]);
+
+    if ($isProjectInDB === true && $errors["project_name"] === null) {
         $errors["project_name"] =
             "Данный проект уже добавлен для этого пользователя";
     }
 
     return array_filter($errors);
+}
+
+/**
+ * Проверяет данные поиска на пустую строку
+ * @param string query - строка запроса
+ * @return array массив ошибок
+ */
+function validateSearchQueryForm(string $query): array
+{
+    $errors = [];
+
+    if (trim($query) == "") {
+        $errors[QUERY] = "Не введен поисковой запрос";
+    }
+
+    return $errors;
+}
+
+/**
+ * Валидирует юзера по данным входа.
+ * @param string $formPassword - пароль из формы
+ * @param array $user - ассоциативный массив пользователя из БД
+ * @return string|null - строку с описание ошибки
+ * или null если пароль верифицирован
+ */
+function checkPasswordValidity(string $formPassword, array $user): ?string
+{
+    if (password_verify($formPassword, $user["password"])) {
+        return null;
+    }
+
+    return "Неверный пароль";
 }

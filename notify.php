@@ -35,7 +35,7 @@ foreach ($usersData as $userData) {
         "Уважаемый, " . $userData["user_name"] . ". "
         . $plannedTaskString
         . $userData["tasks_names"]
-        . " на " . $date . "."
+        . " на " . $userData["date"] . "."
     );
 
     $mailer->send($message);

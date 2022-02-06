@@ -1,6 +1,7 @@
 <?php
 /* @var string $title
  * @var string $content
+ * @var string $bodyBackground
  */
 
 ?>
@@ -18,7 +19,7 @@
 <body>
 <h1 class="visually-hidden"> <?= $title ?> </h1>
 
-<div class="page-wrapper">
+<div class="page-wrapper <?= $bodyBackground ?? "" ?>">
     <div class="container container--with-sidebar">
         <header class="main-header">
             <a href="/">

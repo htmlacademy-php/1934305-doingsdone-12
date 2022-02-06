@@ -13,11 +13,14 @@ if (!isset($_SESSION["user"])) {
     $layoutContent = includeTemplate("layout.php", [
         "content" => $pageContent,
         "title" => $title,
+        "bodyBackground" => "body-background"
     ]);
 
     print($layoutContent);
     exit();
 }
+
+$errors = [];
 
 saveCompleteTasksToSession();
 $showCompleteTasks = (int) $_SESSION["show_complete_tasks"];
@@ -29,11 +32,15 @@ if ($criteria[TASK_ID]) {
     updateStatusTask($con, $userId, $criteria[TASK_ID]);
 }
 
+if (isset($_GET[QUERY])) {
+    $errors = validateSearchQueryForm($_GET[QUERY]);
+}
+
 $projects = [];
 
 $projects = getProjects($con, $userId);
 
-$tasks = getTasksWrapper($con, $userId, $criteria, $showCompleteTasks);
+$tasks = getTasksWrapper($con, $userId, $criteria, $showCompleteTasks, $errors);
 
 $isProjectExist = in_array($criteria[PROJECT_ID], array_column($projects, "id"));
 
@@ -53,7 +60,8 @@ $pageContent = includeTemplate("main.php", [
     "tasks" => $tasks,
     "showCompleteTasks" => $showCompleteTasks,
     "scriptName" => pathinfo(__FILE__, PATHINFO_BASENAME),
-    "btnActive" => $criteria["expire"]
+    "btnActive" => $criteria["expire"],
+    "errors" => $errors
 ]);
 
 $layoutContent = includeTemplate("layout.php", [

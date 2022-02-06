@@ -54,24 +54,6 @@ function makeAuthFormArray(): array
 }
 
 /**
- * Валидирует юзера по данным входа и создаёт сессию.
- * @param string $formPassword - пароль из формы
- * @param array $user - ассоциативный массив пользователя из БД
- * @return string|null - строку с описание ошибки
- * или null если пароль верифицирован
- */
-function createUserSession(string $formPassword, array $user): ?string
-{
-    if (password_verify($formPassword, $user["password"])) {
-        $_SESSION["user"] = $user;
-
-        return null;
-    }
-
-    return "Неверный пароль";
-}
-
-/**
  * Создаёт массив из формы для добавления проекта
  * @return array отфильтрованный массив данных
  * из формы для добавления проекта
@@ -127,7 +109,7 @@ function makeDsn(array $mailer): string
 
 /**
  * Возвращает результат работы подготовленного
- * выражения для дальнейшей обраотки данных пользователя
+ * выражения для дальнейшей обработки данных пользователя
  * @param array $db - ассоциативный массив
  * с конфигом для подключения к базе данных
  * @return mysqli - объект подключения к БД
