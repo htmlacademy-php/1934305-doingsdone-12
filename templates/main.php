@@ -98,7 +98,7 @@ endif; ?>
                                 <?php
                             endif; ?>
                         </td>
-                        <td class="task__date"><?= esc($task["date"]) ?></td>
+                        <td class="task__date"><?= date_create(esc($task["date"]))->format("d.m.Y") ?></td>
                     </tr>
                     <?php
                 endforeach; ?>
