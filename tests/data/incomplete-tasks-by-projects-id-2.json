@@ -2,7 +2,7 @@
   {
     "task_id": 7,
     "task_name": "task1",
-    "date": "2021-01-01",
+    "date": "01.01.2021",
     "project": "\u0423\u0447\u0435\u0431\u0430",
     "is_finished": 0,
     "file": ""
@@ -10,7 +10,7 @@
   {
     "task_id": 8,
     "task_name": "task1",
-    "date": "2021-01-01",
+    "date": "01.01.2021",
     "project": "\u0423\u0447\u0435\u0431\u0430",
     "is_finished": 0,
     "file": ""
@@ -18,7 +18,7 @@
   {
     "task_id": 9,
     "task_name": "task1",
-    "date": "2021-01-01",
+    "date": "01.01.2021",
     "project": "\u0423\u0447\u0435\u0431\u0430",
     "is_finished": 0,
     "file": ""
