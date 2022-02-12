@@ -31,11 +31,11 @@ function includeTemplate(string $name, array $data = []): string
  * от опасных спецсимволов
  * @param string|null @str строка с данными,
  * которая может содержать спецсимволы, или null
- * @return string $text очищенная строка
+ * @return string|null $text очищенная строка
  */
-function esc(?string $str): string
+function esc(?string $str): ?string
 {
-    return htmlspecialchars($str);
+    return ($str) ? htmlspecialchars($str) : null;
 }
 
 /**

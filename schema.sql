@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS users
   password          VARCHAR(60)  NOT NULL,
   registration_time DATETIME     NOT NULL,
   UNIQUE KEY unique_email (email)
-);
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 CREATE TABLE IF NOT EXISTS projects
 (
@@ -18,7 +19,8 @@ CREATE TABLE IF NOT EXISTS projects
   name    VARCHAR(70)  NOT NULL,
   user_id INT UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id)
-);
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 CREATE TABLE IF NOT EXISTS tasks
 (
@@ -33,5 +35,6 @@ CREATE TABLE IF NOT EXISTS tasks
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (project_id) REFERENCES projects (id),
   INDEX status (status),
-  FULLTEXT INDEX name(name)
-);
+  FULLTEXT INDEX name (name)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;

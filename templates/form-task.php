@@ -31,7 +31,7 @@
                 <select class="form__input form__input--select <?= $className ?>" name="project_id" id="project">
                     <?php
                     foreach ($projects as $project) : ?>
-                        <option value="<?= $project["id"] ?>"><?= $project["name"] ?></option>
+                        <option value="<?= $project["id"] ?>"><?= esc($project["name"]) ?></option>
                         <?php
                     endforeach; ?>
                 </select>
