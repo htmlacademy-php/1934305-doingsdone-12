@@ -35,7 +35,7 @@
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
-                            <p><?= $_SESSION["user"]["name"]?></p>
+                            <p><?= esc($_SESSION["user"]["name"]) ?></p>
 
                             <a href="<?= makeURL(LOGOUT_SCRIPT, []) ?>">Выйти</a>
                         </div>

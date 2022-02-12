@@ -67,7 +67,7 @@ function validateTaskName(string $value): ?string
 {
     $valueLen = mb_strlen(trim($value));
 
-    if ($valueLen == 0) {
+    if ($valueLen === 0) {
         return "Поле название надо заполнить";
     }
 
@@ -88,7 +88,7 @@ function validateProjectName(string $value): ?string
 {
     $valueLen = mb_strlen(trim($value));
 
-    if ($valueLen == 0) {
+    if ($valueLen === 0) {
         return "Поле название надо заполнить";
     }
 
@@ -128,7 +128,7 @@ function validateDate(string $dateStr, string $curDate): ?string
         return null;
     }
 
-    if (isDateValid($dateStr) == false) {
+    if (isDateValid($dateStr) === false) {
         return "Неверный формат даты";
     }
 
