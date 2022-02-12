@@ -1,4 +1,6 @@
-CREATE DATABASE IF NOT EXISTS doingsdone_no_spooks_allowed;
+CREATE DATABASE IF NOT EXISTS doingsdone_no_spooks_allowed
+  DEFAULT CHARACTER SET UTF8
+  DEFAULT COLLATE utf8_general_ci;
 
 USE doingsdone_no_spooks_allowed;
 
@@ -10,8 +12,7 @@ CREATE TABLE IF NOT EXISTS users
   password          VARCHAR(60)  NOT NULL,
   registration_time DATETIME     NOT NULL,
   UNIQUE KEY unique_email (email)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
 
 CREATE TABLE IF NOT EXISTS projects
 (
@@ -19,8 +20,7 @@ CREATE TABLE IF NOT EXISTS projects
   name    VARCHAR(70)  NOT NULL,
   user_id INT UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
 
 CREATE TABLE IF NOT EXISTS tasks
 (
@@ -36,5 +36,4 @@ CREATE TABLE IF NOT EXISTS tasks
   FOREIGN KEY (project_id) REFERENCES projects (id),
   INDEX status (status),
   FULLTEXT INDEX name (name)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
