@@ -319,7 +319,7 @@ function validateSearchQueryForm(string $query): array
 {
     $errors = [];
 
-    if (trim($query) == "") {
+    if (trim($query) === "") {
         $errors[QUERY] = "Не введен поисковой запрос";
     }
 
